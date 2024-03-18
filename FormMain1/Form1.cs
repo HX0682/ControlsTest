@@ -17,7 +17,7 @@ namespace FormMain1
 {
     public partial class Form1 : Form
     {
-        private MapControl mapCtrl;
+        private MapControl mapCtrl=new MapControl();
         public Form1()
         {
             InitializeComponent();
@@ -60,7 +60,7 @@ namespace FormMain1
         private void btn2_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "栅格数据(*.tiff) *.tif.*.tiff";
+            openFileDialog.Filter = "栅格数据(*.tiff)|*.tif;*.tiff";
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             string filePath = openFileDialog.FileName;
@@ -79,7 +79,7 @@ namespace FormMain1
         {
             //获得要打开HDF数据的路径
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "HDF、NC数据|*.hdf; *.nc";
+            openFileDialog.Filter = "HDF、NC数据|*.hdf;*.nc";
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             // 打开图层
             string filePath = openFileDialog.FileName;
@@ -98,7 +98,7 @@ namespace FormMain1
         {
             // 打开Persona1 GDB和Dwg
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Personal GDB数据| *mdb|Dwg数据 | *dwg";
+            openFileDialog.Filter = "Personal GDB数据|*.mdb|Dwg数据|*.dwg";
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             //创建数据集
             IMultiDataset multiDataset = PIE.DataSource.DatasetFactory.OpenDataset(openFileDialog.FileName, OpenMode.ReadOnly) as IMultiDataset;
@@ -118,7 +118,7 @@ namespace FormMain1
         private void btn5_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "HF数据|*hdf";
+            openFile.Filter = "HF数据|*.hdf";
             if (openFile.ShowDialog() != DialogResult.OK) return;
 
             string channelName = "NOMChanne113";//波段名称
@@ -141,10 +141,10 @@ namespace FormMain1
         private IRasterLayer OpenStaticData(string  filePath,string channelName,string tiffPath,ISpatialReference spatialReference)
         {
             IRasterLayer rasteLayer = null;
-            //打开MultiDataset
+                //打开MultiDataset
             IMultiDataset hdfDataset=PIE.DataSource.DatasetFactory.OpenDataset(filePath,OpenMode.ReadOnly)as IMultiDataset;
             if(hdfDataset == null) return null;
-            //遍历，查找指定通道的Dataset，进行数据格式转换
+                //遍历，查找指定通道的Dataset，进行数据格式转换
             for(int i = 0;i<hdfDataset.GetDatasetCount();i++)
             {
                 //1、获取操作数据
