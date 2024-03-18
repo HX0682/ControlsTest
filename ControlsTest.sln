@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlsTest", "ControlsTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormMain", "FormMain\FormMain.csproj", "{85390A3D-B7A0-443C-8432-F7ED9C5B49DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormMain1", "FormMain1\FormMain1.csproj", "{87C1DECD-ECFC-4F8E-8958-4930C4D1A52C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Open", "FormMain1\Open.csproj", "{87C1DECD-ECFC-4F8E-8958-4930C4D1A52C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

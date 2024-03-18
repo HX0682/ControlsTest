@@ -28,33 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnAddRasterData = new System.Windows.Forms.ToolStripButton();
-            this.btnMapZoomIn = new System.Windows.Forms.ToolStripButton();
-            this.btnMapZoomOut = new System.Windows.Forms.ToolStripButton();
-            this.btnMapPan = new System.Windows.Forms.ToolStripButton();
-            this.btnMapFullExtent = new System.Windows.Forms.ToolStripButton();
-            this.btnMapCenterZoomIn = new System.Windows.Forms.ToolStripButton();
-            this.btnMapCenterZoomOut = new System.Windows.Forms.ToolStripButton();
-            this.btnMapZoomToNative = new System.Windows.Forms.ToolStripButton();
-            this.btnMapOutputlmg = new System.Windows.Forms.ToolStripButton();
+            this.btn1 = new System.Windows.Forms.ToolStripButton();
+            this.btn2 = new System.Windows.Forms.ToolStripButton();
+            this.btn3 = new System.Windows.Forms.ToolStripButton();
+            this.btn4 = new System.Windows.Forms.ToolStripButton();
+            this.btn5 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStripContainer2 = new System.Windows.Forms.ToolStripContainer();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.btnMapScale = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton10 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.toolStripContainer2.ContentPanel.SuspendLayout();
-            this.toolStripContainer2.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -62,130 +49,70 @@
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnAddRasterData,
-            this.btnMapZoomIn,
-            this.btnMapZoomOut,
-            this.btnMapPan,
-            this.btnMapFullExtent,
-            this.btnMapCenterZoomIn,
-            this.btnMapCenterZoomOut,
-            this.btnMapZoomToNative,
-            this.btnMapOutputlmg});
+            this.btn1,
+            this.btn2,
+            this.btn3,
+            this.btn4,
+            this.btn5});
             this.toolStrip1.Location = new System.Drawing.Point(4, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(378, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(642, 27);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // btnAddRasterData
+            // btn1
             // 
-            this.btnAddRasterData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddRasterData.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRasterData.Image")));
-            this.btnAddRasterData.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddRasterData.Name = "btnAddRasterData";
-            this.btnAddRasterData.Size = new System.Drawing.Size(29, 28);
-            this.btnAddRasterData.Text = "添加栅格数据";
-            this.btnAddRasterData.Click += new System.EventHandler(this.btnAddRasterData_Click);
+            this.btn1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn1.Name = "btn1";
+            this.btn1.Size = new System.Drawing.Size(103, 28);
+            this.btn1.Text = "添加矢量数据";
+            this.btn1.Click += new System.EventHandler(this.btn1_Click);
             // 
-            // btnMapZoomIn
+            // btn2
             // 
-            this.btnMapZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnMapZoomIn.Image")));
-            this.btnMapZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapZoomIn.Name = "btnMapZoomIn";
-            this.btnMapZoomIn.Size = new System.Drawing.Size(29, 28);
-            this.btnMapZoomIn.Text = "地图放大";
-            this.btnMapZoomIn.Click += new System.EventHandler(this.btnMapZoomIn_Click);
+            this.btn2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn2.Name = "btn2";
+            this.btn2.Size = new System.Drawing.Size(103, 28);
+            this.btn2.Text = "添加栅格数据";
+            this.btn2.Click += new System.EventHandler(this.btn2_Click);
             // 
-            // btnMapZoomOut
+            // btn3
             // 
-            this.btnMapZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnMapZoomOut.Image")));
-            this.btnMapZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapZoomOut.Name = "btnMapZoomOut";
-            this.btnMapZoomOut.Size = new System.Drawing.Size(29, 28);
-            this.btnMapZoomOut.Text = "地图缩小";
-            this.btnMapZoomOut.Click += new System.EventHandler(this.btnMapZoomOut_Click);
+            this.btn3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn3.Name = "btn3";
+            this.btn3.Size = new System.Drawing.Size(141, 28);
+            this.btn3.Text = "添加HDF、NC数据";
+            this.btn3.Click += new System.EventHandler(this.btn3_Click);
             // 
-            // btnMapPan
+            // btn4
             // 
-            this.btnMapPan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapPan.Image = ((System.Drawing.Image)(resources.GetObject("btnMapPan.Image")));
-            this.btnMapPan.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapPan.Name = "btnMapPan";
-            this.btnMapPan.Size = new System.Drawing.Size(29, 28);
-            this.btnMapPan.Text = "地图平移";
+            this.btn4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn4.Name = "btn4";
+            this.btn4.Size = new System.Drawing.Size(149, 28);
+            this.btn4.Text = "加载GDB地理数据库";
+            this.btn4.Click += new System.EventHandler(this.btn4_Click);
             // 
-            // btnMapFullExtent
+            // btn5
             // 
-            this.btnMapFullExtent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapFullExtent.Image = ((System.Drawing.Image)(resources.GetObject("btnMapFullExtent.Image")));
-            this.btnMapFullExtent.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapFullExtent.Name = "btnMapFullExtent";
-            this.btnMapFullExtent.Size = new System.Drawing.Size(29, 28);
-            this.btnMapFullExtent.Text = "全图显示";
-            // 
-            // btnMapCenterZoomIn
-            // 
-            this.btnMapCenterZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapCenterZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("btnMapCenterZoomIn.Image")));
-            this.btnMapCenterZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapCenterZoomIn.Name = "btnMapCenterZoomIn";
-            this.btnMapCenterZoomIn.Size = new System.Drawing.Size(29, 28);
-            this.btnMapCenterZoomIn.Text = "中心放大";
-            // 
-            // btnMapCenterZoomOut
-            // 
-            this.btnMapCenterZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapCenterZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("btnMapCenterZoomOut.Image")));
-            this.btnMapCenterZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapCenterZoomOut.Name = "btnMapCenterZoomOut";
-            this.btnMapCenterZoomOut.Size = new System.Drawing.Size(29, 28);
-            this.btnMapCenterZoomOut.Text = "中心缩小";
-            // 
-            // btnMapZoomToNative
-            // 
-            this.btnMapZoomToNative.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapZoomToNative.Image = ((System.Drawing.Image)(resources.GetObject("btnMapZoomToNative.Image")));
-            this.btnMapZoomToNative.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapZoomToNative.Name = "btnMapZoomToNative";
-            this.btnMapZoomToNative.Size = new System.Drawing.Size(29, 28);
-            this.btnMapZoomToNative.Text = "1:1显示";
-            // 
-            // btnMapOutputlmg
-            // 
-            this.btnMapOutputlmg.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnMapOutputlmg.Image = ((System.Drawing.Image)(resources.GetObject("btnMapOutputlmg.Image")));
-            this.btnMapOutputlmg.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMapOutputlmg.Name = "btnMapOutputlmg";
-            this.btnMapOutputlmg.Size = new System.Drawing.Size(133, 28);
-            this.btnMapOutputlmg.Text = "地图显示范围截图";
+            this.btn5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn5.Name = "btn5";
+            this.btn5.Size = new System.Drawing.Size(133, 28);
+            this.btn5.Text = "加载静止卫星数据";
+            this.btn5.Click += new System.EventHandler(this.btn5_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.toolStripContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 419);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 423);
             this.splitContainer1.SplitterDistance = 179;
             this.splitContainer1.TabIndex = 2;
-            // 
-            // toolStripContainer2
-            // 
-            // 
-            // toolStripContainer2.ContentPanel
-            // 
-            this.toolStripContainer2.ContentPanel.Controls.Add(this.toolStrip2);
-            this.toolStripContainer2.ContentPanel.Size = new System.Drawing.Size(150, 150);
-            this.toolStripContainer2.Location = new System.Drawing.Point(3, 245);
-            this.toolStripContainer2.Name = "toolStripContainer2";
-            this.toolStripContainer2.Size = new System.Drawing.Size(150, 175);
-            this.toolStripContainer2.TabIndex = 4;
-            this.toolStripContainer2.Text = "toolStripContainer2";
             // 
             // toolStripContainer1
             // 
@@ -194,7 +121,7 @@
             // 
             this.toolStripContainer1.ContentPanel.AutoScroll = true;
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(800, 419);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(800, 423);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -206,35 +133,6 @@
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             // 
-            // toolStrip2
-            // 
-            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnMapScale,
-            this.toolStripButton10});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 123);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(150, 27);
-            this.toolStrip2.TabIndex = 1;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // btnMapScale
-            // 
-            this.btnMapScale.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMapScale.Name = "btnMapScale";
-            this.btnMapScale.Size = new System.Drawing.Size(0, 24);
-            this.btnMapScale.Text = "比例尺";
-            // 
-            // toolStripButton10
-            // 
-            this.toolStripButton10.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton10.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton10.Image")));
-            this.toolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton10.Name = "toolStripButton10";
-            this.toolStripButton10.Size = new System.Drawing.Size(29, 24);
-            this.toolStripButton10.Text = "toolStripButton10";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -242,23 +140,16 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.toolStripContainer1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Open";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.toolStripContainer2.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer2.ContentPanel.PerformLayout();
-            this.toolStripContainer2.ResumeLayout(false);
-            this.toolStripContainer2.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -266,21 +157,13 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton btnAddRasterData;
-        private System.Windows.Forms.ToolStripButton btnMapZoomIn;
-        private System.Windows.Forms.ToolStripButton btnMapZoomOut;
-        private System.Windows.Forms.ToolStripButton btnMapPan;
-        private System.Windows.Forms.ToolStripButton btnMapFullExtent;
-        private System.Windows.Forms.ToolStripButton btnMapCenterZoomIn;
-        private System.Windows.Forms.ToolStripButton btnMapCenterZoomOut;
-        private System.Windows.Forms.ToolStripButton btnMapZoomToNative;
-        private System.Windows.Forms.ToolStripButton btnMapOutputlmg;
+        private System.Windows.Forms.ToolStripButton btn1;
+        private System.Windows.Forms.ToolStripButton btn2;
+        private System.Windows.Forms.ToolStripButton btn3;
+        private System.Windows.Forms.ToolStripButton btn4;
+        private System.Windows.Forms.ToolStripButton btn5;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStripContainer toolStripContainer2;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
-        private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripLabel btnMapScale;
-        private System.Windows.Forms.ToolStripButton toolStripButton10;
     }
 }
 
