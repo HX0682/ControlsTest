@@ -17,7 +17,7 @@ namespace FormMain1
 {
     public partial class Form1 : Form
     {
-        private MapControl mapCtrl=new MapControl();
+        private MapControl mapCtrl = new MapControl();
         public Form1()
         {
             InitializeComponent();

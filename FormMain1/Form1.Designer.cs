@@ -142,6 +142,7 @@
             this.MinimumSize = new System.Drawing.Size(1000, 800);
             this.Name = "Form1";
             this.Text = "Open";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
