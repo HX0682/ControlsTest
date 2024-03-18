@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlTypes;
 using System.Windows.Forms;
 using PIE.AxControls;
 using PIE.Carto;
 using PIE.DataSource;
 using PIE.Geometry;
-using PIE.SystemUI;
 
 namespace FormMain1
 {
     public partial class Form1 : Form
     {
-        private MapControl mapCtrl;
+        private MapControl mapCtrl=new MapControl();
         public Form1()
         {
             InitializeComponent();
@@ -27,7 +20,7 @@ namespace FormMain1
             splitContainer1.Panel1.Controls.Add(tocCtrl);
 
             //2.添加MapControls
-            var mapCtrl = new MapControl();
+            mapCtrl = new MapControl();
             mapCtrl.Dock = DockStyle.Fill;
             splitContainer1.Panel2.Controls.Add(mapCtrl);
 
@@ -77,7 +70,7 @@ namespace FormMain1
         /// <param name="e"></param>
         private void btn3_Click(object sender, EventArgs e)
         {
-            //获得要打开HDF数据的路径
+            // 获得要打开Shape数据的路径
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "HDF、NC数据|*.hdf;*.nc";
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
@@ -96,13 +89,13 @@ namespace FormMain1
         /// <param name="e"></param>
         private void btn4_Click(object sender, EventArgs e)
         {
-            // 打开Persona1 GDB和Dwg
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Personal GDB数据|*.mdb|Dwg数据|*.dwg";
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             //创建数据集
             IMultiDataset multiDataset = PIE.DataSource.DatasetFactory.OpenDataset(openFileDialog.FileName, OpenMode.ReadOnly) as IMultiDataset;
             if (multiDataset == null) return;
+
             //创建图层
             IMultiLayer multiLayer = PIE.Carto.LayerFactory.CreateDefaultMultiLayer(multiDataset);
             if (multiLayer == null) return;
@@ -138,19 +131,19 @@ namespace FormMain1
         /// <param name="tiffPath">生成tiff路径</param>
         /// <param name="spatialReference">空间参考</param>
         /// <returns></returns>
-        private IRasterLayer OpenStaticData(string  filePath,string channelName,string tiffPath,ISpatialReference spatialReference)
+        private IRasterLayer OpenStaticData(string filePath, string channelName, string tiffPath, ISpatialReference spatialReference)
         {
             IRasterLayer rasteLayer = null;
-                //打开MultiDataset
-            IMultiDataset hdfDataset=PIE.DataSource.DatasetFactory.OpenDataset(filePath,OpenMode.ReadOnly)as IMultiDataset;
-            if(hdfDataset == null) return null;
-                //遍历，查找指定通道的Dataset，进行数据格式转换
-            for(int i = 0;i<hdfDataset.GetDatasetCount();i++)
+            //打开MultiDataset
+            IMultiDataset hdfDataset = PIE.DataSource.DatasetFactory.OpenDataset(filePath, OpenMode.ReadOnly) as IMultiDataset;
+            if (hdfDataset == null) return null;
+            //遍历，查找指定通道的Dataset，进行数据格式转换
+            for (int i = 0; i < hdfDataset.GetDatasetCount(); i++)
             {
                 //1、获取操作数据
                 IDataset pTempDataset = hdfDataset.GetDataset(i);
                 if (pTempDataset.Name != channelName) continue;
-                IRasterDataset hdfRasterDatasetBand=pTempDataset as IRasterDataset;
+                IRasterDataset hdfRasterDatasetBand = pTempDataset as IRasterDataset;
                 //2、读写栅格数据形成新的栅格数据集
                 int nWidth = hdfRasterDatasetBand.GetRasterXSize();
                 int nHeight = hdfRasterDatasetBand.GetRasterYSize();

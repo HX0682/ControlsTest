@@ -25,7 +25,7 @@ namespace FormMain
             splitContainer1.Panel1.Controls.Add(tocCtrl);
 
             //2.添加MapControls
-            var mapCtrl = new MapControl();
+            mapCtrl = new MapControl();
             mapCtrl.Dock = DockStyle.Fill;
             splitContainer1.Panel2.Controls.Add(mapCtrl);
 
@@ -36,12 +36,10 @@ namespace FormMain
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnAddRasterData_Click(object sender, EventArgs e)
+        private void btnAddRasterData_Click_1(object sender, EventArgs e)
         {
-            DialogResult xh = MessageBox.Show("未找到地图数据，无法进行比例尺变换操作。", "提示");
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "栅格数据(*.tiff) *.tif.*.tiff";
-            openFileDialog.Title = "请选择需要打开的栅格数据";
+            openFileDialog.Filter = "栅格数据(*.tiff)|*.tif;*.tiff";
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             string filePath = openFileDialog.FileName;
@@ -175,5 +173,7 @@ namespace FormMain
             MessageBox.Show(string.Format("修改前地图比例尺为:1:{0};\r\n修改后比例尺为:1:{1}", beforeMapScale, lastMapScale), "提示");//提示框显示内容
             mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
+
+        
     }
 }

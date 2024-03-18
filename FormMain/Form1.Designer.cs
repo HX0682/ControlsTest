@@ -77,6 +77,7 @@
             this.btnAddRasterData.Name = "btnAddRasterData";
             this.btnAddRasterData.Size = new System.Drawing.Size(29, 24);
             this.btnAddRasterData.Text = "添加栅格数据";
+            this.btnAddRasterData.Click += new System.EventHandler(this.btnAddRasterData_Click_1);
             // 
             // btnMapZoomIn
             // 
