@@ -111,7 +111,7 @@
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Size = new System.Drawing.Size(982, 726);
-            this.splitContainer1.SplitterDistance = 219;
+            this.splitContainer1.SplitterDistance = 169;
             this.splitContainer1.TabIndex = 2;
             // 
             // toolStripContainer1

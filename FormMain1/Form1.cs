@@ -10,7 +10,7 @@ namespace FormMain1
 {
     public partial class Form1 : Form
     {
-        private MapControl mapCtrl=new MapControl();
+        private MapControl mapCtrl;
         public Form1()
         {
             InitializeComponent();
@@ -23,7 +23,6 @@ namespace FormMain1
             mapCtrl = new MapControl();
             mapCtrl.Dock = DockStyle.Fill;
             splitContainer1.Panel2.Controls.Add(mapCtrl);
-
             tocCtrl.SetBuddyControl(mapCtrl);
         }
         /// <summary>
@@ -82,6 +81,7 @@ namespace FormMain1
             mapCtrl.FocusMap.AddLayer(layer);
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
+        
         /// <summary>
         /// 加载GDB地理数据库
         /// </summary>
@@ -102,6 +102,33 @@ namespace FormMain1
             // 添加图层到地图并刷新
             mapCtrl.FocusMap.AddLayer(multiLayer as ILayer);
             mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+
+
+            ////（方法一）打开File GeoDatabase
+            //FolderBrowserDialog fb = new FolderBrowserDialog();
+            //fb.Description = "File GDB(*.gdb) | *.gdb";
+            //if (fb.ShowDialog() != DialogResult.OK) return;
+            ////打开数据集，当GDB中只有一个图层或无图层时，均返回空值
+            //IMultiDataset multiDataset = DatasetFactory.OpenDataset(fb.SelectedPath, OpenMode.ReadOnly) as IMultiDataset;
+            //if (multiDataset == null)
+            //{
+            //    //创建图层
+            //    ILayer player = PIE.Carto.LayerFactory.CreateDefaultLayer(fb.SelectedPath);
+            //    if (player == null) return;
+            //    // 添加图层到地图并刷新
+            //    mapCtrl.FocusMap.AddLayer(player);
+            //    mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            //}
+            //else
+            //{
+            //    //创建图层
+            //    IMultiLayer multiLayer = LayerFactory.CreateDefaultMultiLayer(multiDataset);
+            //    if (multiLayer == null) return;
+            //    // 添加图层到地图并刷新
+            //    mapCtrl.FocusMap.AddLayer(multiLayer as ILayer);
+            //    mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            //}
+
         }
         /// <summary>
         /// 加载静止卫星数据
@@ -111,17 +138,20 @@ namespace FormMain1
         private void btn5_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "HF数据|*.hdf";
-            if (openFile.ShowDialog() != DialogResult.OK) return;
+            openFile.Filter = "HDF数据|*.hdf";
+            if (openFile.ShowDialog() != DialogResult.OK)
+                return;
 
-            string channelName = "NOMChanne113";//波段名称
-            string tempTif = System.IO.Path.GetDirectoryName(openFile.FileName) + "\\N0MChanne113.tiff";//输出tiff路径
-            ISpatialReference spatialReference = new ProjectedCoordinateSystem();//日标空间参考
-            spatialReference.ImportFromUserInput("+projgeos +h=35785863 +a=6378137.0 +b=6356752.3 +lon_0=104.7 +no_defs");
+            string channelName = "NOMChannel13";//波段名称
+            string tempTif = System.IO.Path.GetDirectoryName(openFile.FileName) + "\\NOMChannel13.tiff";//输出tiff路径
+            ISpatialReference spatialReference = new ProjectedCoordinateSystem();//目标空间参考
+            spatialReference.ImportFromUserInput("+proj=geos +h=35785863 +a=6378137.0 +b=6356752.3 +lon_0=104.7 +no_defs");
+
             IRasterLayer rasterLayer = OpenStaticData(openFile.FileName, channelName, tempTif, spatialReference);
             if (rasterLayer == null) return;
             mapCtrl.FocusMap.AddLayer(rasterLayer as ILayer);
             mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+
         }
         /// <summary>
         /// 打开风云4A、风云2G等静止卫星数据，读取指定波段数据为tiff
@@ -144,6 +174,7 @@ namespace FormMain1
                 IDataset pTempDataset = hdfDataset.GetDataset(i);
                 if (pTempDataset.Name != channelName) continue;
                 IRasterDataset hdfRasterDatasetBand = pTempDataset as IRasterDataset;
+
                 //2、读写栅格数据形成新的栅格数据集
                 int nWidth = hdfRasterDatasetBand.GetRasterXSize();
                 int nHeight = hdfRasterDatasetBand.GetRasterYSize();
@@ -151,14 +182,18 @@ namespace FormMain1
                 int bandCount = hdfRasterDatasetBand.GetBandCount();
                 int[] bandMap = new int[bandCount];
                 for (int j = 0; j < bandCount; j++)
+                {
                     bandMap[j] = j + 1;
+                }
                 UInt16[] arr = new UInt16[nWidth * nHeight * bandCount];
                 bool IsOk = hdfRasterDatasetBand.Read(0, 0, nWidth, nHeight, arr, nWidth, nHeight, pixDataType, bandCount, bandMap);
+
                 IRasterDataset newRasterDataset = DatasetFactory.CreateRasterDataset(tiffPath, nWidth, nHeight, bandCount, pixDataType, "GTiff", null);
                 bool flag = newRasterDataset.Write(0, 0, nWidth, nHeight, arr, nWidth, nHeight, pixDataType, bandCount, bandMap);
                 newRasterDataset.SpatialReference = spatialReference;
                 newRasterDataset.GetRasterBand(0).SetNoDataValue(65535);
-                // 六参数，根据输入坐标的不同需要进行动态设置，本示例代码以风云4 - 4000m的数据作为实验数据
+
+                //六参数，根据输入坐标的不同需要进行动态设置，本示例代码以风云4A-4000m的数据作为实验数据。
                 int beginLineNum = 0;
                 int nReslution = 4000;
                 double[] geoTransform = new double[6];
@@ -177,5 +212,6 @@ namespace FormMain1
             }
             return rasteLayer;
         }
+
     }
 }
