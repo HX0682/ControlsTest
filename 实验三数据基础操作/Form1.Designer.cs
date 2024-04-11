@@ -36,11 +36,11 @@
             this.Stop = new System.Windows.Forms.ToolStripButton();
             this.btn2 = new System.Windows.Forms.ToolStripButton();
             this.btn3 = new System.Windows.Forms.ToolStripButton();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btn4 = new System.Windows.Forms.ToolStripButton();
             this.btn5 = new System.Windows.Forms.ToolStripButton();
             this.btn6 = new System.Windows.Forms.ToolStripButton();
             this.btn7 = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.SuspendLayout();
@@ -126,15 +126,6 @@
             this.btn3.Text = "打开复合数据集";
             this.btn3.Click += new System.EventHandler(this.btn3_Click);
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(1110, 612);
-            this.splitContainer1.SplitterDistance = 227;
-            this.splitContainer1.TabIndex = 1;
-            // 
             // btn4
             // 
             this.btn4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -174,6 +165,15 @@
             this.btn7.Size = new System.Drawing.Size(43, 28);
             this.btn7.Text = "卷帘";
             this.btn7.Click += new System.EventHandler(this.btn7_Click);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 31);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Size = new System.Drawing.Size(1110, 612);
+            this.splitContainer1.SplitterDistance = 227;
+            this.splitContainer1.TabIndex = 1;
             // 
             // Form1
             // 
