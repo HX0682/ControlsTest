@@ -28,25 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnAddRasterData = new System.Windows.Forms.ToolStripButton();
+            this.btn1 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.progressbar = new System.Windows.Forms.ToolStripProgressBar();
+            this.labProMsg = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btnMapZoomIn = new System.Windows.Forms.ToolStripButton();
             this.btnMapZoomOut = new System.Windows.Forms.ToolStripButton();
             this.btnMapPan = new System.Windows.Forms.ToolStripButton();
             this.btnMapFullExtent = new System.Windows.Forms.ToolStripButton();
-            this.btnAddRasterData = new System.Windows.Forms.ToolStripButton();
-            this.btn1 = new System.Windows.Forms.ToolStripButton();
+            this.rghMenuMap = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.加载栅格数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rghMenuRaster = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.删除图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rghMenuVector = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.缩放至图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.toolStrip3.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
+            this.rghMenuMap.SuspendLayout();
+            this.rghMenuRaster.SuspendLayout();
+            this.rghMenuVector.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -56,25 +66,70 @@
             this.btnAddRasterData,
             this.btn1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 25);
+            this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 27);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1182, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1182, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnAddRasterData
+            // 
+            this.btnAddRasterData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnAddRasterData.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRasterData.Image")));
+            this.btnAddRasterData.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddRasterData.Name = "btnAddRasterData";
+            this.btnAddRasterData.Size = new System.Drawing.Size(73, 24);
+            this.btnAddRasterData.Text = "打开数据";
+            this.btnAddRasterData.Click += new System.EventHandler(this.btnAddRasterData_Click);
+            // 
+            // btn1
+            // 
+            this.btn1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn1.Image = ((System.Drawing.Image)(resources.GetObject("btn1.Image")));
+            this.btn1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn1.Name = "btn1";
+            this.btn1.Size = new System.Drawing.Size(52, 24);
+            this.btn1.Text = "功能1";
+            this.btn1.Click += new System.EventHandler(this.btn1_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip3);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
-            this.splitContainer1.Size = new System.Drawing.Size(1182, 728);
+            this.splitContainer1.Size = new System.Drawing.Size(1182, 726);
             this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // toolStrip3
+            // 
+            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressbar,
+            this.labProMsg});
+            this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStrip3.Location = new System.Drawing.Point(40, 701);
+            this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Size = new System.Drawing.Size(896, 25);
+            this.toolStrip3.TabIndex = 1;
+            this.toolStrip3.Text = "toolStrip3";
+            // 
+            // progressbar
+            // 
+            this.progressbar.Name = "progressbar";
+            this.progressbar.Size = new System.Drawing.Size(100, 22);
+            // 
+            // labProMsg
+            // 
+            this.labProMsg.Name = "labProMsg";
+            this.labProMsg.Size = new System.Drawing.Size(122, 22);
+            this.labProMsg.Text = "toolStripLabel1";
             // 
             // toolStrip2
             // 
@@ -88,34 +143,9 @@
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.MinimumSize = new System.Drawing.Size(40, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(40, 728);
+            this.toolStrip2.Size = new System.Drawing.Size(40, 726);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStrip3
-            // 
-            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.toolStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripLabel1});
-            this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStrip3.Location = new System.Drawing.Point(40, 703);
-            this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(896, 25);
-            this.toolStrip3.TabIndex = 1;
-            this.toolStrip3.Text = "toolStrip3";
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(122, 22);
-            this.toolStripLabel1.Text = "toolStripLabel1";
             // 
             // btnMapZoomIn
             // 
@@ -157,25 +187,47 @@
             this.btnMapFullExtent.Text = "全图显示";
             this.btnMapFullExtent.Click += new System.EventHandler(this.btnMapFullExtent_Click);
             // 
-            // btnAddRasterData
+            // rghMenuMap
             // 
-            this.btnAddRasterData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnAddRasterData.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRasterData.Image")));
-            this.btnAddRasterData.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddRasterData.Name = "btnAddRasterData";
-            this.btnAddRasterData.Size = new System.Drawing.Size(103, 22);
-            this.btnAddRasterData.Text = "添加栅格数据";
-            this.btnAddRasterData.Click += new System.EventHandler(this.btnAddRasterData_Click);
+            this.rghMenuMap.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.rghMenuMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.加载栅格数据ToolStripMenuItem});
+            this.rghMenuMap.Name = "rghMenuMap";
+            this.rghMenuMap.Size = new System.Drawing.Size(169, 28);
             // 
-            // btn1
+            // 加载栅格数据ToolStripMenuItem
             // 
-            this.btn1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btn1.Image = ((System.Drawing.Image)(resources.GetObject("btn1.Image")));
-            this.btn1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn1.Name = "btn1";
-            this.btn1.Size = new System.Drawing.Size(52, 22);
-            this.btn1.Text = "功能1";
-            this.btn1.Click += new System.EventHandler(this.btn1_Click);
+            this.加载栅格数据ToolStripMenuItem.Name = "加载栅格数据ToolStripMenuItem";
+            this.加载栅格数据ToolStripMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.加载栅格数据ToolStripMenuItem.Text = "加载栅格数据";
+            // 
+            // rghMenuRaster
+            // 
+            this.rghMenuRaster.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.rghMenuRaster.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.删除图层ToolStripMenuItem});
+            this.rghMenuRaster.Name = "rghMenuRaster";
+            this.rghMenuRaster.Size = new System.Drawing.Size(139, 28);
+            // 
+            // 删除图层ToolStripMenuItem
+            // 
+            this.删除图层ToolStripMenuItem.Name = "删除图层ToolStripMenuItem";
+            this.删除图层ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.删除图层ToolStripMenuItem.Text = "删除图层";
+            // 
+            // rghMenuVector
+            // 
+            this.rghMenuVector.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.rghMenuVector.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.缩放至图层ToolStripMenuItem});
+            this.rghMenuVector.Name = "rghMenuVector";
+            this.rghMenuVector.Size = new System.Drawing.Size(154, 28);
+            // 
+            // 缩放至图层ToolStripMenuItem
+            // 
+            this.缩放至图层ToolStripMenuItem.Name = "缩放至图层ToolStripMenuItem";
+            this.缩放至图层ToolStripMenuItem.Size = new System.Drawing.Size(153, 24);
+            this.缩放至图层ToolStripMenuItem.Text = "缩放至图层";
             // 
             // Form1
             // 
@@ -192,10 +244,13 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
+            this.rghMenuMap.ResumeLayout(false);
+            this.rghMenuRaster.ResumeLayout(false);
+            this.rghMenuVector.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,14 +262,20 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripProgressBar progressbar;
+        private System.Windows.Forms.ToolStripLabel labProMsg;
         private System.Windows.Forms.ToolStripButton btnMapZoomIn;
         private System.Windows.Forms.ToolStripButton btnMapZoomOut;
         private System.Windows.Forms.ToolStripButton btnMapPan;
         private System.Windows.Forms.ToolStripButton btnMapFullExtent;
         private System.Windows.Forms.ToolStripButton btnAddRasterData;
         private System.Windows.Forms.ToolStripButton btn1;
+        private System.Windows.Forms.ContextMenuStrip rghMenuMap;
+        private System.Windows.Forms.ContextMenuStrip rghMenuRaster;
+        private System.Windows.Forms.ContextMenuStrip rghMenuVector;
+        private System.Windows.Forms.ToolStripMenuItem 加载栅格数据ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除图层ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 缩放至图层ToolStripMenuItem;
     }
 }
 
