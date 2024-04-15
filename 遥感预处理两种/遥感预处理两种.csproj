@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Utils.v18.1, Version=18.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="PIE.AdapterUI, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.AdapterUICLR, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.Carto, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
@@ -46,6 +47,14 @@
     <Reference Include="PIE.Display, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.Framework, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.Geometry, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.BatchDealTools, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.CloudFlash, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.ImagePreProcess, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.ImageTransform, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.MapSubdivision, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.MonitorAnalysis, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.Plugin.UtilityTools, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
+    <Reference Include="PIE.SARAlgo, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.SystemAlgo, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.SystemUI, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />
     <Reference Include="PIE.Utility, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ee1bc88606bd5383, processorArchitecture=AMD64" />

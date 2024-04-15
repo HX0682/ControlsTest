@@ -48,6 +48,7 @@
             this.删除图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rghMenuVector = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.缩放至图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btn2 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -64,7 +65,8 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddRasterData,
-            this.btn1});
+            this.btn1,
+            this.btn2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 27);
             this.toolStrip1.Name = "toolStrip1";
@@ -198,8 +200,9 @@
             // 加载栅格数据ToolStripMenuItem
             // 
             this.加载栅格数据ToolStripMenuItem.Name = "加载栅格数据ToolStripMenuItem";
-            this.加载栅格数据ToolStripMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.加载栅格数据ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.加载栅格数据ToolStripMenuItem.Text = "加载栅格数据";
+            this.加载栅格数据ToolStripMenuItem.Click += new System.EventHandler(this.加载栅格数据ToolStripMenuItem_Click);
             // 
             // rghMenuRaster
             // 
@@ -212,8 +215,9 @@
             // 删除图层ToolStripMenuItem
             // 
             this.删除图层ToolStripMenuItem.Name = "删除图层ToolStripMenuItem";
-            this.删除图层ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.删除图层ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.删除图层ToolStripMenuItem.Text = "删除图层";
+            this.删除图层ToolStripMenuItem.Click += new System.EventHandler(this.删除图层ToolStripMenuItem_Click);
             // 
             // rghMenuVector
             // 
@@ -221,13 +225,24 @@
             this.rghMenuVector.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.缩放至图层ToolStripMenuItem});
             this.rghMenuVector.Name = "rghMenuVector";
-            this.rghMenuVector.Size = new System.Drawing.Size(154, 28);
+            this.rghMenuVector.Size = new System.Drawing.Size(211, 56);
             // 
             // 缩放至图层ToolStripMenuItem
             // 
             this.缩放至图层ToolStripMenuItem.Name = "缩放至图层ToolStripMenuItem";
-            this.缩放至图层ToolStripMenuItem.Size = new System.Drawing.Size(153, 24);
+            this.缩放至图层ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.缩放至图层ToolStripMenuItem.Text = "缩放至图层";
+            this.缩放至图层ToolStripMenuItem.Click += new System.EventHandler(this.缩放至图层ToolStripMenuItem_Click);
+            // 
+            // btn2
+            // 
+            this.btn2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn2.Image = ((System.Drawing.Image)(resources.GetObject("btn2.Image")));
+            this.btn2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn2.Name = "btn2";
+            this.btn2.Size = new System.Drawing.Size(52, 24);
+            this.btn2.Text = "功能2";
+            this.btn2.Click += new System.EventHandler(this.btn2_Click);
             // 
             // Form1
             // 
@@ -276,6 +291,7 @@
         private System.Windows.Forms.ToolStripMenuItem 加载栅格数据ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 删除图层ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 缩放至图层ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton btn2;
     }
 }
 
