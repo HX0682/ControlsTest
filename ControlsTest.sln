@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "实验三数据基础操作
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "遥感预处理两种", "遥感预处理两种\遥感预处理两种.csproj", "{4A010D62-FFFC-4FE0-9C1E-895B28AEE9CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "右击事件", "右击事件\右击事件.csproj", "{80FB15BB-8BD4-457F-8445-88632FF1CF81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "图像变换", "右击事件\图像变换.csproj", "{80FB15BB-8BD4-457F-8445-88632FF1CF81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

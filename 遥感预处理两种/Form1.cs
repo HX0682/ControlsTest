@@ -1,4 +1,5 @@
-﻿using PIE.AxControls;
+﻿using DevExpress.Utils.Drawing.Helpers;
+using PIE.AxControls;
 using PIE.Carto;
 using PIE.CommonAlgo;
 using PIE.Display;
@@ -403,7 +404,7 @@ namespace 遥感预处理两种
         /// <param name="bVisibleBoundChanged"></param>
         private void TransformEvent_OnVisibleBoundsUpdated(IDisplayTransformation displayTransformation, bool bVisibleBoundChanged)
         {
-            MessageBox.Show("地图范围发生变化");
+            //MessageBox.Show("地图范围发生变化");
         }
         /// <summary>
         /// 地图分辨率发生变化
@@ -411,7 +412,7 @@ namespace 遥感预处理两种
         /// <param name="displayTransformation"></param>
         private void mapControlEvent_OnResolutionUpdated(IDisplayTransformation displayTransformation)
         {
-            MessageBox.Show("地图分辨率发生变化");
+            //MessageBox.Show("地图分辨率发生变化");
         }
         /// <summary>
         /// 可视范围发生变化
@@ -421,8 +422,360 @@ namespace 遥感预处理两种
         /// <param name="newEnvelope"></param>
         private void mapControlEvent_OnExtentUpdated(object sender, bool sizeChanged, IEnvelope newEnvelope)
         {
-            MessageBox.Show("可视范围发生变化");
+            //MessageBox.Show("可视范围发生变化");
         }
 
+        private void 主成分正变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmPCA();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //主成分正变换算法实现
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformForwardPCAAlgo");
+            algo.Name = "TransformForwardPCAAlgo";
+            algo.Description = "主成分正变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+           
+            //3.注册算法事件
+            var algoEvent = algo as ISystemAlgoEvents;
+            algoEvent.OnProgressChanged += FPAlgoEvent_OnProgressChanged;
+            algoEvent.OnExecuteCompleted += FPAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+        /// <summary>
+        /// 算法完成事件
+        /// </summary>
+        /// <param name="algo"></param>
+        private void FPAlgoEvent_OnExecuteCompleted(ISystemAlgo algo)
+        {
+            progressbar.Value = 0;
+            labProMsg.Text = "";
+            var eCode = -1;
+            var eMsg = "";
+            algo.GetErrorInfo(ref eCode, ref eMsg);
+            if (eCode != 0)
+            {
+                MessageBox.Show(algo.Name + "执行失败!");
+                return;
+            }
+            else
+            {
+                var info = algo.Params as ForwardPCA_Exchange_Info;
+                if (info == null) return;
+                var outFile = info.m_strOutputResultFile;
+                var layer = LayerFactory.CreateDefaultLayer(outFile);
+                mapCtrl.FocusMap.AddLayer(layer);
+                mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+        }
+        /// <summary>
+        /// 算法进度事件
+        /// </summary>
+        /// <param name="complete"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private int FPAlgoEvent_OnProgressChanged(double complete,string mag, ISystemAlgo algo)
+        {
+            //算法进度
+            progressbar.Value = Convert.ToInt32(complete);
+            //算法进度消息
+            labProMsg.Text = mag;
+            return 1;
+        }
+
+        private void 主成分逆变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmPCAInv();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //主成分逆变换算法实现
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformInversePCAAlgo");
+            algo.Name = "TransformForwardPCAAlgo";
+            algo.Description = "主成分逆变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 最小噪声正变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmMNF();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            if (algo == null)
+            {
+                MessageBox.Show("地图分辨率发生变化");
+                return;
+            }
+            algo.Name = "TransformFuncAlgo";
+            algo.Description = "最小噪声正变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 最小噪声逆变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmMNFInv();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            if (algo == null) return;
+            algo.Name = "TransformFuncAlgo";
+            algo.Description = "最小噪声逆变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 小波正变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmWAVELET();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            algo.Name = "TransformFunAlgo";
+            algo.Description = "小波正变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 小波逆变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmWAVELETInv();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            algo.Name = "TransformFunAlgo";
+            algo.Description = "小波逆变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 傅里叶正变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmFFT();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            algo.Name = "TransformFunAlgo";
+            algo.Description = "傅里叶正变换";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 傅里叶逆变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmFFTInv();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            algo.Name = "TransformFunAlgo";
+            algo.Description = "傅里叶逆变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 缨帽变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmKT();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformFuncAlgo");
+            algo.Name = "TransformFunAlgo";
+            algo.Description = "缨帽变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            //3.注册算法事件
+            var algoEvent = algo as ISystemAlgoEvents;
+            algoEvent.OnProgressChanged += KTAlgoEvent_OnProgressChanged;
+            algoEvent.OnExecuteCompleted += KTAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+        /// <summary>
+        /// 算法完成事件
+        /// </summary>
+        /// <param name="algo"></param>
+        private void KTAlgoEvent_OnExecuteCompleted(ISystemAlgo algo)
+        {
+            progressbar.Value = 0;
+            labProMsg.Text = "";
+            var eCode = -1;
+            var eMsg = "";
+            algo.GetErrorInfo(ref eCode, ref eMsg);
+            if (eCode != 0)
+            {
+                MessageBox.Show(algo.Name + "执行失败!");
+                return;
+            }
+            else
+            {
+                var info = algo.Params as DataTrans_Exchange_Info;
+                if (info == null) return;
+                var outFile = info.m_strOutputFile;
+                var layer = LayerFactory.CreateDefaultLayer(outFile);
+                mapCtrl.FocusMap.AddLayer(layer);
+                mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+        }
+        /// <summary>
+        /// 算法进度事件
+        /// </summary>
+        /// <param name="complete"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private int KTAlgoEvent_OnProgressChanged(double complete, string mag, ISystemAlgo algo)
+        {
+            //算法进度
+            progressbar.Value = Convert.ToInt32(complete);
+            //算法进度消息
+            labProMsg.Text = mag;
+            return 1;
+        }
+
+        private void 彩色空间正变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmRGB2IHS();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformRGB2IHSAlgo");
+            algo.Name = "TransformRGB2IHSAlgo";
+            algo.Description = "彩色空间正变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 彩色空间逆变换ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmIHS2RGB();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.TransformIHS2RGBAlgo");
+            algo.Name = "TransformRGB2IHSAlgo";
+            algo.Description = "彩色空间逆变换算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
+
+        private void 去相关拉伸ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1.调用功能插件中的窗体
+            var frm = new PIE.Plugin.FrmDeRelationStretch();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
+            //1.创建算法对象
+            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.DeRelationStretch");
+            if (algo == null) return;
+            algo.Name = "DeRelationStretch";
+            algo.Description = "去相关拉伸算法";
+            //2.设置算法参数
+            algo.Params = frm.ExChangeData;
+
+            ////3.注册算法事件
+            //var algoEvent = algo as ISystemAlgoEvents;
+            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
+            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+        }
     }
 }

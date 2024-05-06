@@ -33,6 +33,19 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAddRasterData = new System.Windows.Forms.ToolStripButton();
             this.btn1 = new System.Windows.Forms.ToolStripButton();
+            this.btn2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.主成分变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.主成分正变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.主成分逆变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.最小噪声变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.最小噪声正变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.最小噪声逆变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.小波变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.傅里叶变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.缨帽变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.彩色空间变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.去相关拉伸ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.progressbar = new System.Windows.Forms.ToolStripProgressBar();
@@ -48,7 +61,12 @@
             this.删除图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rghMenuVector = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.缩放至图层ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn2 = new System.Windows.Forms.ToolStripButton();
+            this.小波正变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.小波逆变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.傅里叶正变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.傅里叶逆变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.彩色空间正变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.彩色空间逆变换ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,7 +84,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddRasterData,
             this.btn1,
-            this.btn2});
+            this.btn2,
+            this.toolStripSplitButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 27);
             this.toolStrip1.Name = "toolStrip1";
@@ -93,6 +112,120 @@
             this.btn1.Size = new System.Drawing.Size(52, 24);
             this.btn1.Text = "功能1";
             this.btn1.Click += new System.EventHandler(this.btn1_Click);
+            // 
+            // btn2
+            // 
+            this.btn2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btn2.Image = ((System.Drawing.Image)(resources.GetObject("btn2.Image")));
+            this.btn2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn2.Name = "btn2";
+            this.btn2.Size = new System.Drawing.Size(52, 24);
+            this.btn2.Text = "功能2";
+            this.btn2.Click += new System.EventHandler(this.btn2_Click);
+            // 
+            // toolStripSplitButton1
+            // 
+            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.主成分变换ToolStripMenuItem,
+            this.最小噪声变换ToolStripMenuItem,
+            this.小波变换ToolStripMenuItem,
+            this.傅里叶变换ToolStripMenuItem,
+            this.缨帽变换ToolStripMenuItem,
+            this.彩色空间变换ToolStripMenuItem,
+            this.去相关拉伸ToolStripMenuItem});
+            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(88, 24);
+            this.toolStripSplitButton1.Text = "图像变换";
+            // 
+            // 主成分变换ToolStripMenuItem
+            // 
+            this.主成分变换ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.主成分正变换ToolStripMenuItem,
+            this.主成分逆变换ToolStripMenuItem});
+            this.主成分变换ToolStripMenuItem.Name = "主成分变换ToolStripMenuItem";
+            this.主成分变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.主成分变换ToolStripMenuItem.Text = "主成分变换";
+            // 
+            // 主成分正变换ToolStripMenuItem
+            // 
+            this.主成分正变换ToolStripMenuItem.Name = "主成分正变换ToolStripMenuItem";
+            this.主成分正变换ToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.主成分正变换ToolStripMenuItem.Text = "主成分正变换";
+            this.主成分正变换ToolStripMenuItem.Click += new System.EventHandler(this.主成分正变换ToolStripMenuItem_Click);
+            // 
+            // 主成分逆变换ToolStripMenuItem
+            // 
+            this.主成分逆变换ToolStripMenuItem.Name = "主成分逆变换ToolStripMenuItem";
+            this.主成分逆变换ToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.主成分逆变换ToolStripMenuItem.Text = "主成分逆变换";
+            this.主成分逆变换ToolStripMenuItem.Click += new System.EventHandler(this.主成分逆变换ToolStripMenuItem_Click);
+            // 
+            // 最小噪声变换ToolStripMenuItem
+            // 
+            this.最小噪声变换ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.最小噪声正变换ToolStripMenuItem,
+            this.最小噪声逆变换ToolStripMenuItem});
+            this.最小噪声变换ToolStripMenuItem.Name = "最小噪声变换ToolStripMenuItem";
+            this.最小噪声变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.最小噪声变换ToolStripMenuItem.Text = "最小噪声变换";
+            // 
+            // 最小噪声正变换ToolStripMenuItem
+            // 
+            this.最小噪声正变换ToolStripMenuItem.Name = "最小噪声正变换ToolStripMenuItem";
+            this.最小噪声正变换ToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            this.最小噪声正变换ToolStripMenuItem.Text = "最小噪声正变换";
+            this.最小噪声正变换ToolStripMenuItem.Click += new System.EventHandler(this.最小噪声正变换ToolStripMenuItem_Click);
+            // 
+            // 最小噪声逆变换ToolStripMenuItem
+            // 
+            this.最小噪声逆变换ToolStripMenuItem.Name = "最小噪声逆变换ToolStripMenuItem";
+            this.最小噪声逆变换ToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            this.最小噪声逆变换ToolStripMenuItem.Text = "最小噪声逆变换";
+            this.最小噪声逆变换ToolStripMenuItem.Click += new System.EventHandler(this.最小噪声逆变换ToolStripMenuItem_Click);
+            // 
+            // 小波变换ToolStripMenuItem
+            // 
+            this.小波变换ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.小波正变换ToolStripMenuItem,
+            this.小波逆变换ToolStripMenuItem});
+            this.小波变换ToolStripMenuItem.Name = "小波变换ToolStripMenuItem";
+            this.小波变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.小波变换ToolStripMenuItem.Text = "小波变换";
+            // 
+            // 傅里叶变换ToolStripMenuItem
+            // 
+            this.傅里叶变换ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.傅里叶正变换ToolStripMenuItem,
+            this.傅里叶逆变换ToolStripMenuItem});
+            this.傅里叶变换ToolStripMenuItem.Name = "傅里叶变换ToolStripMenuItem";
+            this.傅里叶变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.傅里叶变换ToolStripMenuItem.Text = "傅里叶变换";
+            // 
+            // 缨帽变换ToolStripMenuItem
+            // 
+            this.缨帽变换ToolStripMenuItem.Name = "缨帽变换ToolStripMenuItem";
+            this.缨帽变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.缨帽变换ToolStripMenuItem.Text = "缨帽变换";
+            this.缨帽变换ToolStripMenuItem.Click += new System.EventHandler(this.缨帽变换ToolStripMenuItem_Click);
+            // 
+            // 彩色空间变换ToolStripMenuItem
+            // 
+            this.彩色空间变换ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.彩色空间正变换ToolStripMenuItem,
+            this.彩色空间逆变换ToolStripMenuItem});
+            this.彩色空间变换ToolStripMenuItem.Name = "彩色空间变换ToolStripMenuItem";
+            this.彩色空间变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.彩色空间变换ToolStripMenuItem.Text = "彩色空间变换";
+            // 
+            // 去相关拉伸ToolStripMenuItem
+            // 
+            this.去相关拉伸ToolStripMenuItem.Name = "去相关拉伸ToolStripMenuItem";
+            this.去相关拉伸ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.去相关拉伸ToolStripMenuItem.Text = "去相关拉伸";
+            this.去相关拉伸ToolStripMenuItem.Click += new System.EventHandler(this.去相关拉伸ToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -200,7 +333,7 @@
             // 加载栅格数据ToolStripMenuItem
             // 
             this.加载栅格数据ToolStripMenuItem.Name = "加载栅格数据ToolStripMenuItem";
-            this.加载栅格数据ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.加载栅格数据ToolStripMenuItem.Size = new System.Drawing.Size(168, 24);
             this.加载栅格数据ToolStripMenuItem.Text = "加载栅格数据";
             this.加载栅格数据ToolStripMenuItem.Click += new System.EventHandler(this.加载栅格数据ToolStripMenuItem_Click);
             // 
@@ -215,7 +348,7 @@
             // 删除图层ToolStripMenuItem
             // 
             this.删除图层ToolStripMenuItem.Name = "删除图层ToolStripMenuItem";
-            this.删除图层ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.删除图层ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.删除图层ToolStripMenuItem.Text = "删除图层";
             this.删除图层ToolStripMenuItem.Click += new System.EventHandler(this.删除图层ToolStripMenuItem_Click);
             // 
@@ -225,24 +358,56 @@
             this.rghMenuVector.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.缩放至图层ToolStripMenuItem});
             this.rghMenuVector.Name = "rghMenuVector";
-            this.rghMenuVector.Size = new System.Drawing.Size(211, 56);
+            this.rghMenuVector.Size = new System.Drawing.Size(154, 28);
             // 
             // 缩放至图层ToolStripMenuItem
             // 
             this.缩放至图层ToolStripMenuItem.Name = "缩放至图层ToolStripMenuItem";
-            this.缩放至图层ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.缩放至图层ToolStripMenuItem.Size = new System.Drawing.Size(153, 24);
             this.缩放至图层ToolStripMenuItem.Text = "缩放至图层";
             this.缩放至图层ToolStripMenuItem.Click += new System.EventHandler(this.缩放至图层ToolStripMenuItem_Click);
             // 
-            // btn2
+            // 小波正变换ToolStripMenuItem
             // 
-            this.btn2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btn2.Image = ((System.Drawing.Image)(resources.GetObject("btn2.Image")));
-            this.btn2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn2.Name = "btn2";
-            this.btn2.Size = new System.Drawing.Size(52, 24);
-            this.btn2.Text = "功能2";
-            this.btn2.Click += new System.EventHandler(this.btn2_Click);
+            this.小波正变换ToolStripMenuItem.Name = "小波正变换ToolStripMenuItem";
+            this.小波正变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.小波正变换ToolStripMenuItem.Text = "小波正变换";
+            this.小波正变换ToolStripMenuItem.Click += new System.EventHandler(this.小波正变换ToolStripMenuItem_Click);
+            // 
+            // 小波逆变换ToolStripMenuItem
+            // 
+            this.小波逆变换ToolStripMenuItem.Name = "小波逆变换ToolStripMenuItem";
+            this.小波逆变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.小波逆变换ToolStripMenuItem.Text = "小波逆变换";
+            this.小波逆变换ToolStripMenuItem.Click += new System.EventHandler(this.小波逆变换ToolStripMenuItem_Click);
+            // 
+            // 傅里叶正变换ToolStripMenuItem
+            // 
+            this.傅里叶正变换ToolStripMenuItem.Name = "傅里叶正变换ToolStripMenuItem";
+            this.傅里叶正变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.傅里叶正变换ToolStripMenuItem.Text = "傅里叶正变换";
+            this.傅里叶正变换ToolStripMenuItem.Click += new System.EventHandler(this.傅里叶正变换ToolStripMenuItem_Click);
+            // 
+            // 傅里叶逆变换ToolStripMenuItem
+            // 
+            this.傅里叶逆变换ToolStripMenuItem.Name = "傅里叶逆变换ToolStripMenuItem";
+            this.傅里叶逆变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.傅里叶逆变换ToolStripMenuItem.Text = "傅里叶逆变换";
+            this.傅里叶逆变换ToolStripMenuItem.Click += new System.EventHandler(this.傅里叶逆变换ToolStripMenuItem_Click);
+            // 
+            // 彩色空间正变换ToolStripMenuItem
+            // 
+            this.彩色空间正变换ToolStripMenuItem.Name = "彩色空间正变换ToolStripMenuItem";
+            this.彩色空间正变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.彩色空间正变换ToolStripMenuItem.Text = "彩色空间正变换";
+            this.彩色空间正变换ToolStripMenuItem.Click += new System.EventHandler(this.彩色空间正变换ToolStripMenuItem_Click);
+            // 
+            // 彩色空间逆变换ToolStripMenuItem
+            // 
+            this.彩色空间逆变换ToolStripMenuItem.Name = "彩色空间逆变换ToolStripMenuItem";
+            this.彩色空间逆变换ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.彩色空间逆变换ToolStripMenuItem.Text = "彩色空间逆变换";
+            this.彩色空间逆变换ToolStripMenuItem.Click += new System.EventHandler(this.彩色空间逆变换ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -292,6 +457,24 @@
         private System.Windows.Forms.ToolStripMenuItem 删除图层ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 缩放至图层ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btn2;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
+        private System.Windows.Forms.ToolStripMenuItem 主成分变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 最小噪声变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 小波变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 傅里叶变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 缨帽变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 彩色空间变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 去相关拉伸ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 主成分正变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 主成分逆变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 最小噪声正变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 最小噪声逆变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 小波正变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 小波逆变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 傅里叶正变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 傅里叶逆变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 彩色空间正变换ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 彩色空间逆变换ToolStripMenuItem;
     }
 }
 
