@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "遥感预处理两种", "�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "图像变换", "右击事件\图像变换.csproj", "{80FB15BB-8BD4-457F-8445-88632FF1CF81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "课设", "课设\课设.csproj", "{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{80FB15BB-8BD4-457F-8445-88632FF1CF81}.Release|x64.Build.0 = Release|Any CPU
 		{80FB15BB-8BD4-457F-8445-88632FF1CF81}.Release|x86.ActiveCfg = Release|Any CPU
 		{80FB15BB-8BD4-457F-8445-88632FF1CF81}.Release|x86.Build.0 = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|x64.Build.0 = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Debug|x86.Build.0 = Debug|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|x64.ActiveCfg = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|x64.Build.0 = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|x86.ActiveCfg = Release|Any CPU
+		{023A2C37-F520-49F0-B7F3-3D5D5FA2F046}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

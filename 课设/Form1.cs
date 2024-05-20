@@ -18,8 +18,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Gif.Components;
 
-namespace 遥感预处理两种
+namespace 课设
 {
     public partial class Form1 : Form
     {
@@ -85,6 +86,67 @@ namespace 遥感预处理两种
                 }
             }
         }
+        
+        /// <summary>
+        /// 加载栅格数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 加载栅格数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new PIE.Controls.RasterCommand();
+            cmd.OnCreate(mapCtrl);
+            cmd.OnClick();
+        }
+        /// <summary>
+        /// 删除图层
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 删除图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new PIE.Controls.DeleteLayerCommand();
+            cmd.OnCreate(mapCtrl);
+            cmd.OnClick();
+        }
+        /// <summary>
+        /// 缩放至图层
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 缩放至图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new PIE.Controls.ZoomToLayerCommand();
+            cmd.OnCreate(mapCtrl);
+            cmd.OnClick();
+        }
+        /// <summary>
+        /// 地图范围发生变化
+        /// </summary>
+        /// <param name="displayTransformation"></param>
+        /// <param name="bVisibleBoundChanged"></param>
+        private void TransformEvent_OnVisibleBoundsUpdated(IDisplayTransformation displayTransformation, bool bVisibleBoundChanged)
+        {
+            //MessageBox.Show("地图范围发生变化");
+        }
+        /// <summary>
+        /// 地图分辨率发生变化
+        /// </summary>
+        /// <param name="displayTransformation"></param>
+        private void mapControlEvent_OnResolutionUpdated(IDisplayTransformation displayTransformation)
+        {
+            //MessageBox.Show("地图分辨率发生变化");
+        }
+        /// <summary>
+        /// 可视范围发生变化
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="sizeChanged"></param>
+        /// <param name="newEnvelope"></param>
+        private void mapControlEvent_OnExtentUpdated(object sender, bool sizeChanged, IEnvelope newEnvelope)
+        {
+            //MessageBox.Show("可视范围发生变化");
+        }
 
         /// <summary>
         /// 添加数据
@@ -105,86 +167,87 @@ namespace 遥感预处理两种
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
         /// <summary>
-        /// 地图放大
+        /// 辐射定标
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnMapZoomIn_Click(object sender, EventArgs e)
+        private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            ICommand cmd = new PIE.Controls.CenterZoomInCommand();
-            cmd.OnCreate(mapCtrl);
-            cmd.OnClick();
+            //1、调用功能插件中的窗体 
+            var frm = new PIE.Plugin.FrmPIECalibration();
+            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            // 辐射定标算法实现
+            // 1.创建算法对象
+            var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.CalibrationAlgo");
+            algo.Name = "CalibrationAlgo";
+            algo.Description = "辐射定标算法";
+            //2.设置算法参数
+            if (frm.ExChangeData == null) return;
+            algo.Params = frm.ExChangeData;
+            //var info = new DataPreCali_Exchange_Info();
+            //info.InputFilePath = @"D:\\Temp\\06-数据基础操作数据\\栅格数据\\01.GF1-tiff\\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600\\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600-PAN1.tiff";
+            //info.XMLFilePath = @"D:\Temp\06-数据基础操作数据\栅格数据\01.GF1-tiff\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600-PAN1.xml";
+            //info.OutputFilePath = @"D:\Temp\fsdb.tif";
+            //info.FileTypeCode = "GTiff";
+            //info.Type = 100;
+            //algo.Params = info;
+
+            //3.注册算法事件
+            var algoEvent = algo as ISystemAlgoEvents;
+            algoEvent.OnProgressChanged += AlgoEvent_OnProgressChanged;
+            algoEvent.OnExecuteCompleted += AlgoEvent_OnExecuteCompleted;
+            // 4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
         /// <summary>
-        /// 地图缩小
+        /// 算法完成事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnMapZoomOut_Click(object sender, EventArgs e)
+        /// <param name="algo"></param>
+        private void AlgoEvent_OnExecuteCompleted(ISystemAlgo algo)
         {
-            ICommand cmd = new PIE.Controls.CenterZoomOutCommand();
-            cmd.OnCreate(mapCtrl);
-            cmd.OnClick();
+            progressbar.Value = 0;
+            labProMsg.Text = "";
+            var eCode = -1;
+            var eMsg = "";
+            algo.GetErrorInfo(ref eCode, ref eMsg);
+            if (eCode != 0)
+            {
+                MessageBox.Show(algo.Name + "执行失败!");
+                return;
+            }
+            else
+            {
+                var info = algo.Params as DataPreCali_Exchange_Info;
+                if (info == null) return;
+                var outFile = info.OutputFilePath;
+                var layer = LayerFactory.CreateDefaultLayer(outFile);
+                mapCtrl.FocusMap.AddLayer(layer);
+                mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
         }
         /// <summary>
-        /// 地图平移
+        /// 算法进度事件
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnMapPan_Click(object sender, EventArgs e)
+        /// <param name="complete"></param>
+        /// <param name="mag"></param>
+        /// <param name="algo"></param>
+        /// <returns></returns>
+        private int AlgoEvent_OnProgressChanged(double complete, string mag, ISystemAlgo algo)
         {
-            ITool tool = new PIE.Controls.PanTool();
-            (tool as ICommand).OnCreate(mapCtrl);
-            mapCtrl.CurrentTool = tool;
+            //算法进度
+            progressbar.Value = Convert.ToInt32(complete);
+            //算法进度消息
+            labProMsg.Text = mag;
+            return 1;
         }
         /// <summary>
-        /// 全图显示
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnMapFullExtent_Click(object sender, EventArgs e)
-        {
-            ICommand command = new PIE.Controls.FullExtentCommand();
-            command.OnCreate(mapCtrl);
-            command.OnClick();
-        }
-        /// <summary>
-        /// 功能1
+        /// 大气校正
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btn1_Click(object sender, EventArgs e)
         {
-            ////1、调用功能插件中的窗体 
-            //var frm = new PIE.Plugin.FrmPIECalibration();
-            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-            //// 辐射定标算法实现
-            //// 1.创建算法对象
-            //var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.CalibrationAlgo");
-            //algo.Name = "CalibrationAlgo";
-            //algo.Description = "辐射定标算法";
-            ////2.设置算法参数
-            //if (frm.ExChangeData == null) return;
-            //algo.Params = frm.ExChangeData;            
-            ////var info = new DataPreCali_Exchange_Info();
-            ////info.InputFilePath = @"D:\\Temp\\06-数据基础操作数据\\栅格数据\\01.GF1-tiff\\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600\\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600-PAN1.tiff";
-            ////info.XMLFilePath = @"D:\Temp\06-数据基础操作数据\栅格数据\01.GF1-tiff\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600\GF1_PMS1_E116.5_N39.4_20131127_L1A0000117600-PAN1.xml";
-            ////info.OutputFilePath = @"D:\Temp\fsdb.tif";
-            ////info.FileTypeCode = "GTiff";
-            ////info.Type = 100;
-            ////algo.Params = info;
-
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += AlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += AlgoEvent_OnExecuteCompleted;
-            //// 4.执行算法
-            //AlgoFactory.Instance().AsynExecuteAlgo(algo);
-
-
-
-
-
+            
             //1.调用功能插件中的窗体
             var frm = new PIE.Plugin.FrmAtmosphericCorrection();
             if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -263,48 +326,13 @@ namespace 遥感预处理两种
             return 1;
         }
         /// <summary>
-        /// 功能二
+        /// 图像裁剪
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btn2_Click(object sender, EventArgs e)
         {
-            ////1.调用功能插件中的窗体
-            //var frm = new PIE.Plugin.FrmImageClip(0b0);
-            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-
-            ////图像裁剪算法实现
-            ////1.创建算法对象
-            //var algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.ImageClipAlgo");
-            //algo.Name = "ImageClipAlgo";
-            //algo.Description = "图像裁剪算法";
-            ////2.设置算法参数
-            //algo.Params = frm.ExChangeData;
-
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
-
-
-            ////4.执行算法
-            //AlgoFactory.Instance().AsynExecuteAlgo(algo);
-
-
-
-            //DataPreImgClip_Exchange_Info info = new DataPreImgClip_Exchange_Info();
-            //info.InputFilePath = @"D:\Temp\06-数据基础操作数据\栅格数据\01.GF1-tiff\langfangDEM\廊坊dem.tif";
-            //info.OutputFilePath = @"D:\Temp\06-数据基础操作数据\栅格数据\01.GF1-tiff\langfangDEM\廊坊caijian.tif";
-            //info.XStart = 1440;
-            //info.XEnd = 1770;
-            //info.YStart = 160;
-            //info.YEnd = 480;
-
-            //info.Type = 0;
-            //info.listBands = new List<int>() { 0, 1, 2 };
-            //info.FileType = "GTiff";
-
-            GraphicsLayer graphicsLayer = null;//错误
+            GraphicsLayer graphicsLayer = null;
             //1.调用功能插件中的窗体
             var frm = new PIE.Plugin.FrmImageClip(graphicsLayer);//必须输入一个参数
             if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -367,64 +395,59 @@ namespace 遥感预处理两种
             return 1;
         }
         /// <summary>
-        /// 加载栅格数据
+        /// 地图放大
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 加载栅格数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnMapZoomIn_Click(object sender, EventArgs e)
         {
-            var cmd = new PIE.Controls.RasterCommand();
+            ICommand cmd = new PIE.Controls.CenterZoomInCommand();
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
         /// <summary>
-        /// 删除图层
+        /// 地图缩小
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 删除图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnMapZoomOut_Click(object sender, EventArgs e)
         {
-            var cmd = new PIE.Controls.DeleteLayerCommand();
+            ICommand cmd = new PIE.Controls.CenterZoomOutCommand();
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
         /// <summary>
-        /// 缩放至图层
+        /// 地图平移
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 缩放至图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnMapPan_Click(object sender, EventArgs e)
         {
-            var cmd = new PIE.Controls.ZoomToLayerCommand();
-            cmd.OnCreate(mapCtrl);
-            cmd.OnClick();
+            ITool tool = new PIE.Controls.PanTool();
+            (tool as ICommand).OnCreate(mapCtrl);
+            mapCtrl.CurrentTool = tool;
         }
         /// <summary>
-        /// 地图范围发生变化
-        /// </summary>
-        /// <param name="displayTransformation"></param>
-        /// <param name="bVisibleBoundChanged"></param>
-        private void TransformEvent_OnVisibleBoundsUpdated(IDisplayTransformation displayTransformation, bool bVisibleBoundChanged)
-        {
-            //MessageBox.Show("地图范围发生变化");
-        }
-        /// <summary>
-        /// 地图分辨率发生变化
-        /// </summary>
-        /// <param name="displayTransformation"></param>
-        private void mapControlEvent_OnResolutionUpdated(IDisplayTransformation displayTransformation)
-        {
-            //MessageBox.Show("地图分辨率发生变化");
-        }
-        /// <summary>
-        /// 可视范围发生变化
+        /// 全图显示
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="sizeChanged"></param>
-        /// <param name="newEnvelope"></param>
-        private void mapControlEvent_OnExtentUpdated(object sender, bool sizeChanged, IEnvelope newEnvelope)
+        /// <param name="e"></param>
+        private void btnMapFullExtent_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("可视范围发生变化");
+            ICommand command = new PIE.Controls.FullExtentCommand();
+            command.OnCreate(mapCtrl);
+            command.OnClick();
+        }
+        /// <summary>
+        /// 属性查询按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            var tool = new AttributeIdentifyTool();//添加Controls库引用
+            (tool as ICommand).OnCreate(mapCtrl);
+            mapCtrl.CurrentTool = tool;
         }
 
         private void 主成分正变换ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -779,11 +802,7 @@ namespace 遥感预处理两种
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
-        /// <summary>
-        /// 影像格式转换
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
         private void 影像格式转换ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //1.调用功能插件中的窗体
@@ -851,11 +870,7 @@ namespace 遥感预处理两种
             labProMsg.Text = mag;
             return 1;
         }
-        /// <summary>
-        /// 存储格式转换
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
         private void 存储格式转换ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //1.调用功能插件中的窗体
@@ -878,84 +893,112 @@ namespace 遥感预处理两种
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
-
         private void 位深转换ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ////1.调用功能插件中的窗体
-            //var frm = new PIE.Plugin.FrmBitDepthTrans();
-            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            #region 1、参数设置
+            PIE.CommonAlgo.DataBitDepthTrans_Exchange_Info info = new PIE.CommonAlgo.DataBitDepthTrans_Exchange_Info();
+            info.InputFile = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
+            info.OutputFile = @"D:\Temp\07-数据基础操作数据\04.World\World2.tif";
+            info.MaxIn = 255;
+            info.MinIn = 0;
+            info.MaxOut = 32768;
+            info.MinOut = -32768;
+            info.OutDataType = 1;
 
-            ////1.创建算法对象
-            //ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BitDepthTransAlgo");
-            //if (algo == null) return;
-            //algo.Name = "BitDepthTransAlgo";
-            //algo.Description = "位深转换";
-            ////2.设置算法参数
-            //algo.Params = frm.ExChangeData;
-
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += RCAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += RCAlgoEvent_OnExecuteCompleted;
-
-            ////4.执行算法
-            //AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BitDepthTransAlgo");
+            if (algo == null) return;
+            #endregion
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = "位深转换";
+            algo.Params = info;
+            PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
+            //3、结果显示
+            ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\World2.tif");
+            mapCtrl.ActiveView.FocusMap.AddLayer(layer); mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
 
         private void 波段运算ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ////1.调用功能插件中的窗体
-            //var frm = new PIE.AxControls.UtilityOperBandDialog();
-            ////if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            //1.调用功能插件中的窗体
+            var frm = new PIE.AxControls.UtilityOperBandDialog();
+            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
 
-            ////设置地图，与mapControlMain中的地图绑定
-            //frm.SetMap(mapCtrl.FocusMap);
-            ////初始化
-            //frm.ReInit();
+            //设置地图，与mapControlMain中的地图绑定
+            frm.SetMap(mapCtrl.FocusMap);
+            //初始化
+            frm.ReInit();
 
-            ////1.创建算法对象
-            //ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandOperAlgo");
-            //if (algo == null) return;
-            //algo.Name = "BandOperAlgo";
-            //algo.Description = "波段运算";
-            ////2.设置算法参数
-            //algo.Params = frm.GetParams();
+            //1.创建算法对象
+            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandOperAlgo");
+            if (algo == null) return;
+            algo.Name = "BandOperAlgo";
+            algo.Description = "波段运算";
+            //2.设置算法参数
+            algo.Params = frm.GetParams();
 
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += RCAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += RCAlgoEvent_OnExecuteCompleted;
+            //3.注册算法事件
+            var algoEvent = algo as ISystemAlgoEvents;
+            algoEvent.OnProgressChanged += RCAlgoEvent_OnProgressChanged;
+            algoEvent.OnExecuteCompleted += RCAlgoEvent_OnExecuteCompleted;
 
-            ////4.执行算法
-            //AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            //4.执行算法
+            AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
 
         private void 波谱运算ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ////1.调用功能插件中的窗体
-            //var frm = new PIE.Plugin.FrmSpecBand();
-            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            #region 1、参数设置
+            PIE.CommonAlgo.BandOper_Exchange_Info info = new PIE.CommonAlgo.BandOper_Exchange_Info();
+            info.StrExp = "s1";
+            info.SelectFileBands = new List<int> { 1 };
+            info.SelectFileNames = new List<string> { @"D:\Temp\07-数据基础操作数据\04.World\World.tif", @"D:\Temp\07-数据基础操作数据\04.World\World.tif" };
+            info.OutputFilePath = @"D:\Temp\07-数据基础操作数据\04.World\World4.tif";
+            info.FileTypeCode = "GTiff";
 
-            ////1.创建算法对象
-            //ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandSpecAlgo");
-            //if (algo == null) return;
-            //algo.Name = "BandSpecAlgo";
-            //algo.Description = "波谱运算";
-            ////2.设置算法参数
-            //algo.Params = frm.ExChangeData;
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandSpecAlgo");
+            if (algo == null) return;
+            #endregion
 
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += RCAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += RCAlgoEvent_OnExecuteCompleted;
-
-            ////4.执行算法
-            //AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = "波谱运算";
+            algo.Params = info; PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
+            //3、结果显示
+            ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\World4.tif");
+            mapCtrl.ActiveView.FocusMap.AddLayer(layer); mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
-
+        
         private void 波段合成ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //
+            
+            #region 1、参数设置
+            PIE.CommonAlgo.BandCombination_Exchange_Info info = new PIE.CommonAlgo.BandCombination_Exchange_Info();
+            string path = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
+            IRasterDataset rDataset = DatasetFactory.OpenDataset(path, OpenMode.ReadOnly) as IRasterDataset;
+
+            info.m_vecFileptr = new List<IRasterDataset> { rDataset, rDataset };
+            List<int> list1 = new List<int> { 0, 1, 2 };
+            info.bands = new List<List<int>> { list1, list1 };
+            info.tstrfile = @"D:\Temp\07-数据基础操作数据\04.World\World5.tif";
+            info.m_strFileTypeCode = "GTiff";
+            PIE.CommonAlgo.Interestregion interestregion = new PIE.CommonAlgo.Interestregion();
+            interestregion.SetRegion(0, 0, rDataset.GetRasterYSize(), rDataset.GetRasterXSize());
+            info.regioninfo = new List<PIE.CommonAlgo.Interestregion> { interestregion, interestregion };
+            info.m_iOutRangeCrossType = 0;
+
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandCombinationAlgo");
+            if (algo == null) return;
+            #endregion
+
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = "波段合成";
+            algo.Params = info;
+            bool result = PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
+            //3、结果显示
+            ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\World5.tif");
+            mapCtrl.ActiveView.FocusMap.AddLayer(layer); mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
 
         private void 读取ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1064,18 +1107,6 @@ namespace 遥感预处理两种
                 mapCtrl.FocusMap.SelectFeature(featurelayer as ILayer, feature);
             }
             mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
-
-        }
-        /// <summary>
-        /// 属性查询按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            var tool = new AttributeIdentifyTool();//添加Controls库引用
-            (tool as ICommand).OnCreate(mapCtrl);
-            mapCtrl.CurrentTool = tool;
         }
 
         private void 修改ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1100,6 +1131,129 @@ namespace 遥感预处理两种
                 fea = feaCursor.NextFeature();
             }
             mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+        /// <summary>
+        /// 动画图层
+        /// </summary>
+        private IAnimationLayer m_AnimationLayer = null;
+        /// <summary>
+        /// 添加长时间序列
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 添加数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //1、获取数据
+            IList<string>
+            listFile = new List<string>();
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Multiselect = true;
+            openDialog.Title = "打开长时间序列数据";
+            openDialog.Filter = "SeriesData(*.tiff)|*.tiff;*.tif";
+            if (openDialog.ShowDialog() != DialogResult.OK) return;
+            //2、加载动画图层
+            ILayer tempLayer = null;
+            m_AnimationLayer = new AnimationLayer();
+
+            foreach (var fileName in openDialog.FileNames)
+            {
+                tempLayer = LayerFactory.CreateDefaultLayer(fileName);
+                m_AnimationLayer.AddLayer(tempLayer);
+            }
+
+            ILayer layer = m_AnimationLayer as ILayer;
+            layer.Name = "长时间序列数据";
+            mapCtrl.FocusMap.AddLayer(layer);
+            mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            m_AnimationLayer.SetInterval(500);//设置时间间隔
+            m_AnimationLayer.Start();//开始播放
+        }
+
+        private void 继续ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_AnimationLayer.Pause();
+        }
+
+        private void 暂停ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_AnimationLayer.Pause();
+        }
+
+        private void 停止ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_AnimationLayer.Stop();
+        }
+
+        private void 动画导出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //设置导出路径
+            SaveFileDialog saveDlg = new SaveFileDialog();
+            saveDlg.Filter = "GIF Data|*.gif";
+            saveDlg.Title = "请选择动画保存路径";
+            if (saveDlg.ShowDialog() != DialogResult.OK)
+                return;
+            var outFile = saveDlg.FileName;//gif动画文件路径
+
+            m_AnimationLayer.Stop();//动画暂停
+
+            //设置gif动画导出
+            AnimatedGifEncoder gifencoder = new AnimatedGifEncoder();
+            gifencoder.Start(outFile);//开始导出
+            gifencoder.SetDelay(500);//每帧播放时间
+            gifencoder.SetRepeat(0);//-1：不重复，0：重复
+
+            //向gifencoder对象中添加单帧图片
+            for (int i = 0; i < m_AnimationLayer.LayerCount; i++)
+            {
+                m_AnimationLayer.SetCurrentFrameIndex(i);//设置当前帧
+                mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+                System.Threading.Thread.Sleep(100);
+                var image = mapCtrl.GetScreenshot();//获取屏幕截图
+                gifencoder.AddFrame(image);//添加截图到gifencoder
+            }
+            gifencoder.Finish();//结束导出
+            MessageBox.Show($"导出成功！{outFile}");
+        }
+        /// <summary>
+        /// 查看图层属性
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            //1.获取查看图层
+            IMap map = mapCtrl.FocusMap;
+            ILayer layer = map.GetLayer(0);
+
+            //2.实例化属性查看窗口对象
+            PIE.AxControls.LayerPropertyDialog dlg = new PIE.AxControls.LayerPropertyDialog();
+            PIETOCNodeTag pieTOCNodeTag = new PIETOCNodeTag();
+            pieTOCNodeTag.Map = map;
+            pieTOCNodeTag.Layer = layer;
+
+            ILayer layerl = pieTOCNodeTag.Layer;
+            dlg.Initial(map, layer);
+            dlg.ShowDialog();
+        }
+        /// <summary>
+        /// 查看矢量数据表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            //1.获取查看数据的图层
+            IMap map = mapCtrl.FocusMap;
+            ILayer layer = map.GetLayer(0);
+
+            //2.实例属性窗口对象
+            PIE.AxControls.FeatureLayerAttributeDialog fLayerAttributeDlg = new FeatureLayerAttributeDialog();
+            PIETOCNodeTag pieTOCNodeTag = new PIETOCNodeTag();
+            pieTOCNodeTag.Map = map;
+            pieTOCNodeTag.Layer = layer;
+            //m_mapControl.CustomerProperty = pieTOCNodeTag:
+            fLayerAttributeDlg.Initial(map, layer);
+            fLayerAttributeDlg.ShowDialog();
         }
     }
 }

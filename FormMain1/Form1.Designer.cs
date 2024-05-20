@@ -110,7 +110,7 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(982, 726);
+            this.splitContainer1.Size = new System.Drawing.Size(982, 722);
             this.splitContainer1.SplitterDistance = 169;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -121,7 +121,7 @@
             // 
             this.toolStripContainer1.ContentPanel.AutoScroll = true;
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(982, 726);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(982, 722);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
