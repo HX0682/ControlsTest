@@ -1,4 +1,4 @@
-﻿using DevExpress.Utils.Drawing.Helpers;
+﻿using Gif.Components;
 using PIE.AxControls;
 using PIE.Carto;
 using PIE.CommonAlgo;
@@ -10,15 +10,7 @@ using PIE.SystemAlgo;
 using PIE.SystemUI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Gif.Components;
 
 namespace 课设
 {
@@ -26,6 +18,7 @@ namespace 课设
     {
         private MapControl mapCtrl;
         private TOCControl tocCtrl;
+
         public Form1()
         {
             InitializeComponent();
@@ -53,9 +46,8 @@ namespace 课设
             //显示转换事件注册
             ITransformEvents transformEvent = (ITransformEvents)mapCtrl.ActiveView.DisplayTransformation;
             transformEvent.OnVisibleBoundsUpdated += TransformEvent_OnVisibleBoundsUpdated;//可视化范围变化事件
-
-
         }
+
         /// <summary>
         /// 图层树控件鼠标点击事件
         /// </summary>
@@ -77,16 +69,18 @@ namespace 课设
                     case PIETOCNodeType.Map:
                         rghMenuMap.Show(tocCtrl, new System.Drawing.Point(e.X, e.Y));
                         break;
+
                     case PIETOCNodeType.RasterLayer:
                         rghMenuRaster.Show(tocCtrl, new System.Drawing.Point(e.X, e.Y));
                         break;
+
                     case PIETOCNodeType.FeatureLayer:
                         rghMenuVector.Show(tocCtrl, new System.Drawing.Point(e.X, e.Y));
                         break;
                 }
             }
         }
-        
+
         /// <summary>
         /// 加载栅格数据
         /// </summary>
@@ -98,6 +92,7 @@ namespace 课设
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
+
         /// <summary>
         /// 删除图层
         /// </summary>
@@ -109,6 +104,7 @@ namespace 课设
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
+
         /// <summary>
         /// 缩放至图层
         /// </summary>
@@ -120,6 +116,7 @@ namespace 课设
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
+
         /// <summary>
         /// 地图范围发生变化
         /// </summary>
@@ -129,6 +126,7 @@ namespace 课设
         {
             //MessageBox.Show("地图范围发生变化");
         }
+
         /// <summary>
         /// 地图分辨率发生变化
         /// </summary>
@@ -137,6 +135,7 @@ namespace 课设
         {
             //MessageBox.Show("地图分辨率发生变化");
         }
+
         /// <summary>
         /// 可视范围发生变化
         /// </summary>
@@ -166,6 +165,7 @@ namespace 课设
             mapCtrl.FocusMap.AddLayer(layer);
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
+
         /// <summary>
         /// 辐射定标
         /// </summary>
@@ -173,7 +173,7 @@ namespace 课设
         /// <param name="e"></param>
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            //1、调用功能插件中的窗体 
+            //1、调用功能插件中的窗体
             var frm = new PIE.Plugin.FrmPIECalibration();
             if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             // 辐射定标算法实现
@@ -199,6 +199,7 @@ namespace 课设
             // 4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -225,6 +226,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -240,6 +242,7 @@ namespace 课设
             labProMsg.Text = mag;
             return 1;
         }
+
         /// <summary>
         /// 大气校正
         /// </summary>
@@ -247,7 +250,6 @@ namespace 课设
         /// <param name="e"></param>
         private void btn1_Click(object sender, EventArgs e)
         {
-            
             //1.调用功能插件中的窗体
             var frm = new PIE.Plugin.FrmAtmosphericCorrection();
             if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -280,10 +282,10 @@ namespace 课设
             algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
             algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
 
-
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -310,6 +312,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -325,6 +328,7 @@ namespace 课设
             labProMsg.Text = mag;
             return 1;
         }
+
         /// <summary>
         /// 图像裁剪
         /// </summary>
@@ -351,8 +355,8 @@ namespace 课设
             algoEvents.OnExecuteCompleted += CjAlgoEvent_OnExecuteCompleted;
             algoEvents.OnProgressChanged += CjAlgoEvent_OnProgressChanged;
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
-
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -379,6 +383,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -394,6 +399,7 @@ namespace 课设
             labProMsg.Text = mag;
             return 1;
         }
+
         /// <summary>
         /// 地图放大
         /// </summary>
@@ -405,6 +411,7 @@ namespace 课设
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
+
         /// <summary>
         /// 地图缩小
         /// </summary>
@@ -416,6 +423,7 @@ namespace 课设
             cmd.OnCreate(mapCtrl);
             cmd.OnClick();
         }
+
         /// <summary>
         /// 地图平移
         /// </summary>
@@ -427,6 +435,7 @@ namespace 课设
             (tool as ICommand).OnCreate(mapCtrl);
             mapCtrl.CurrentTool = tool;
         }
+
         /// <summary>
         /// 全图显示
         /// </summary>
@@ -438,6 +447,7 @@ namespace 课设
             command.OnCreate(mapCtrl);
             command.OnClick();
         }
+
         /// <summary>
         /// 属性查询按钮
         /// </summary>
@@ -472,6 +482,7 @@ namespace 课设
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -498,6 +509,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -695,6 +707,7 @@ namespace 课设
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -721,6 +734,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -825,6 +839,7 @@ namespace 课设
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         /// <summary>
         /// 算法完成事件
         /// </summary>
@@ -851,6 +866,7 @@ namespace 课设
                 mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             }
         }
+
         /// <summary>
         /// 算法进度事件
         /// </summary>
@@ -893,9 +909,11 @@ namespace 课设
             //4.执行算法
             AlgoFactory.Instance().AsynExecuteAlgo(algo);
         }
+
         private void 位深转换ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             #region 1、参数设置
+
             PIE.CommonAlgo.DataBitDepthTrans_Exchange_Info info = new PIE.CommonAlgo.DataBitDepthTrans_Exchange_Info();
             info.InputFile = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
             info.OutputFile = @"D:\Temp\07-数据基础操作数据\04.World\World2.tif";
@@ -907,7 +925,9 @@ namespace 课设
 
             PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BitDepthTransAlgo");
             if (algo == null) return;
-            #endregion
+
+            #endregion 1、参数设置
+
             //2、算法执行
             PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
             algo.Name = "位深转换";
@@ -949,6 +969,7 @@ namespace 课设
         private void 波谱运算ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             #region 1、参数设置
+
             PIE.CommonAlgo.BandOper_Exchange_Info info = new PIE.CommonAlgo.BandOper_Exchange_Info();
             info.StrExp = "s1";
             info.SelectFileBands = new List<int> { 1 };
@@ -958,7 +979,8 @@ namespace 课设
 
             PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandSpecAlgo");
             if (algo == null) return;
-            #endregion
+
+            #endregion 1、参数设置
 
             //2、算法执行
             PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
@@ -968,11 +990,11 @@ namespace 课设
             ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\World4.tif");
             mapCtrl.ActiveView.FocusMap.AddLayer(layer); mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
-        
+
         private void 波段合成ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             #region 1、参数设置
+
             PIE.CommonAlgo.BandCombination_Exchange_Info info = new PIE.CommonAlgo.BandCombination_Exchange_Info();
             string path = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
             IRasterDataset rDataset = DatasetFactory.OpenDataset(path, OpenMode.ReadOnly) as IRasterDataset;
@@ -989,7 +1011,8 @@ namespace 课设
 
             PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandCombinationAlgo");
             if (algo == null) return;
-            #endregion
+
+            #endregion 1、参数设置
 
             //2、算法执行
             PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
@@ -1007,7 +1030,6 @@ namespace 课设
             IFeatureClass featureClass = (layer as IFeatureLayer).FeatureClass;
 
             string fileName = featureClass.GetName();
-
 
             long featureCount = featureClass.GetFeatureCount();
             string spatia1Reference = featureClass.GetFeatureDataset().SpatialReference.Name;
@@ -1132,10 +1154,12 @@ namespace 课设
             }
             mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
+
         /// <summary>
         /// 动画图层
         /// </summary>
         private IAnimationLayer m_AnimationLayer = null;
+
         /// <summary>
         /// 添加长时间序列
         /// </summary>
@@ -1214,6 +1238,7 @@ namespace 课设
             gifencoder.Finish();//结束导出
             MessageBox.Show($"导出成功！{outFile}");
         }
+
         /// <summary>
         /// 查看图层属性
         /// </summary>
@@ -1235,6 +1260,7 @@ namespace 课设
             dlg.Initial(map, layer);
             dlg.ShowDialog();
         }
+
         /// <summary>
         /// 查看矢量数据表
         /// </summary>
@@ -1254,6 +1280,125 @@ namespace 课设
             //m_mapControl.CustomerProperty = pieTOCNodeTag:
             fLayerAttributeDlg.Initial(map, layer);
             fLayerAttributeDlg.ShowDialog();
+        }
+
+        /// <summary>
+        /// 栅格数据读取
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            IRasterDataset rasterDs = null;
+            for (int i = 0; i < mapCtrl.FocusMap.LayerCount; i++)
+            {
+                var layer = mapCtrl.FocusMap.GetLayer(i);
+                if (layer is IRasterLayer)
+                {
+                    rasterDs = (layer as IRasterLayer).Dataset;
+                    break;
+                }
+            }
+            if (rasterDs == null)
+            {
+                MessageBox.Show("没有找到栅格数据集！");
+                return;
+            }
+            var filePath = rasterDs.FullName;
+            var rsName = rasterDs.Name;
+            var bandCount = rasterDs.GetBandCount();
+            var rsWidth = rasterDs.GetRasterXSize();
+            var rsHeight = rasterDs.GetRasterYSize();
+            var rsSpaRef = rasterDs.SpatialReference;
+
+            MessageBox.Show($"栅格数据集路径：{filePath};\r\n栅格数据集名称：{rsName};\r\n栅格数据集波段数：{bandCount};" + $"\r\n栅格数据集宽度:{rsWidth};\r\n栅格数据集高度:{rsHeight};\r\n空间参考:{rsSpaRef}");
+        }
+
+        /// <summary>
+        /// 创建栅格数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 创建ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //栅格数据读取
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "RasterFile|*.tif;*.tiff";
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "数据保存路径";
+            saveFileDialog.Filter = "RasterFile|*.tif";
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            IRasterDataset rDataset = DatasetFactory.OpenRasterDataset(openFileDialog.FileName, OpenMode.ReadOnly);
+            ILayer layer = LayerFactory.CreateDefaultLayer(openFileDialog.FileName);
+            mapCtrl.FocusMap.AddLayer(layer);
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+
+            //栅格数据集的属性信息
+            var filePath = rDataset.FullName;
+            var rsName = rDataset.Name;
+            var bandCount = rDataset.GetBandCount();
+            var rsWidth = rDataset.GetRasterXSize();
+            var rsHeight = rDataset.GetRasterYSize();
+            var rsSpaRef = rDataset.SpatialReference;
+
+            MessageBox.Show($"栅格数据集路:{filePath};\r\n栅格数据集名称:{rsName};\r\n栅格数据集波段数:{bandCount};" +
+                $"\r\n栅格数据集宽度:{rsWidth};\r\n栅格数据集高度:{rsHeight};\r\n空间参考:{rsSpaRef}");
+            PixelDataType pixelType = rDataset.GetRasterBand(0).GetRasterDataType();
+
+            Byte[] arr = new Byte[rsWidth * rsHeight * bandCount];
+            int[] bandMap = new int[bandCount];
+            for (int i = 0; i < bandCount; i++)
+            {
+                bandMap[i] = i + 1;
+            }
+            bool ok = rDataset.Read(0, 0, rsWidth, rsHeight, arr, rsWidth, rsHeight, pixelType, bandCount, bandMap);
+            IRasterDataset newRDataset = DatasetFactory.CreateRasterDataset(saveFileDialog.FileName, rsWidth, rsHeight, bandCount, pixelType, "GTiff", null);
+            newRDataset.Write(0, 0, rsWidth, rsHeight, arr, rsWidth, rsHeight, pixelType, bandCount, bandMap);
+            newRDataset.SpatialReference = rDataset.SpatialReference;
+            double[] geoTrans = rDataset.GetGeoTransform();
+            newRDataset.SetGeoTransform(geoTrans);
+
+            ILayer layer2 = LayerFactory.CreateDefaultRasterLayer(newRDataset) as ILayer;
+            mapCtrl.FocusMap.AddLayer(layer2);
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        /// <summary>
+        /// 栅格数据创建金字塔
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void 创建金字塔ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //对话框选择栅格数据集
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "RasterFile|*.tif;*.tiff";
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+                string path = openFileDialog.FileName;
+
+                //打开栅格数据集
+                IRasterDataset rasterDataset = DatasetFactory.OpenRasterDataset(path, OpenMode.ReadOnly);
+                //读取创建前的栅格数据集金字塔级别
+                int count = rasterDataset.GetPyramidLevel();
+                MessageBox.Show("金字塔创建之前的级别为【" + count + "】");
+                //创建栅格数据集金字塔：重采样比率，数据类别（高斯、最近邻、立方卷积等），两个回调函数
+                bool bOk = rasterDataset.BuildPyramid(Convert.ToSingle(0.5), DadaSampleType.CUBIC, null, null);
+                //读取创建后的栅格数据集金字塔级别
+                count = rasterDataset.GetPyramidLevel();
+
+                if (bOk) MessageBox.Show("金字塔创建成功，金字塔创建后的级别为【" + count + "】");
+                else MessageBox.Show("金字塔创建失败！");
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "创建金字塔失败异常");
+            }
         }
     }
 }
