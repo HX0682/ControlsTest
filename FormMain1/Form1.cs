@@ -1,16 +1,16 @@
-﻿using System;
-using System.Data.SqlTypes;
-using System.Windows.Forms;
-using PIE.AxControls;
+﻿using PIE.AxControls;
 using PIE.Carto;
 using PIE.DataSource;
 using PIE.Geometry;
+using System;
+using System.Windows.Forms;
 
 namespace FormMain1
 {
     public partial class Form1 : Form
     {
         private MapControl mapCtrl;
+
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +25,7 @@ namespace FormMain1
             splitContainer1.Panel2.Controls.Add(mapCtrl);
             tocCtrl.SetBuddyControl(mapCtrl);
         }
+
         /// <summary>
         /// 添加矢量数据
         /// </summary>
@@ -44,6 +45,7 @@ namespace FormMain1
             mapCtrl.FocusMap.AddLayer(layer);
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
+
         /// <summary>
         /// 添加栅格数据
         /// </summary>
@@ -62,6 +64,7 @@ namespace FormMain1
             mapCtrl.FocusMap.AddLayer(layer);
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
+
         /// <summary>
         /// 添加HDF、NC数据
         /// </summary>
@@ -81,7 +84,7 @@ namespace FormMain1
             mapCtrl.FocusMap.AddLayer(layer);
             mapCtrl.ActiveView.PartialRefresh(PIE.Carto.ViewDrawPhaseType.ViewAll);
         }
-        
+
         /// <summary>
         /// 加载GDB地理数据库
         /// </summary>
@@ -102,7 +105,6 @@ namespace FormMain1
             // 添加图层到地图并刷新
             mapCtrl.FocusMap.AddLayer(multiLayer as ILayer);
             mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
-
 
             ////（方法一）打开File GeoDatabase
             //FolderBrowserDialog fb = new FolderBrowserDialog();
@@ -128,8 +130,8 @@ namespace FormMain1
             //    mapCtrl.FocusMap.AddLayer(multiLayer as ILayer);
             //    mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
             //}
-
         }
+
         /// <summary>
         /// 加载静止卫星数据
         /// </summary>
@@ -151,8 +153,8 @@ namespace FormMain1
             if (rasterLayer == null) return;
             mapCtrl.FocusMap.AddLayer(rasterLayer as ILayer);
             mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
-
         }
+
         /// <summary>
         /// 打开风云4A、风云2G等静止卫星数据，读取指定波段数据为tiff
         /// </summary>
@@ -212,6 +214,5 @@ namespace FormMain1
             }
             return rasteLayer;
         }
-
     }
 }
