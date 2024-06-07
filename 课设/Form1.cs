@@ -10,6 +10,7 @@ using PIE.SystemAlgo;
 using PIE.SystemUI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace 课设
@@ -1399,6 +1400,241 @@ namespace 课设
             {
                 MessageBox.Show(ex.ToString(), "创建金字塔失败异常");
             }
+        }
+
+        private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //面要素简单渲染
+            var xzqPolygon = mapCtrl.FocusMap.GetLayer(0) as IFeatureLayer;
+            IFeatureSimpleSymbolRender polygonSimpleRender = new FeatureSimpleSymbolRender();//简单渲染对象
+            ISimpleLineSymbol simpleLSymbol = new SimpleLineSymbol();
+            simpleLSymbol.Style = SimpleLineStyle.SLSDashDot;
+            ILineSymbol lineSymbol = simpleLSymbol as LineSymbol;
+            lineSymbol.Color = System.Drawing.Color.Red;
+            lineSymbol.Width = 2;
+            lineSymbol.Join = LineJoinStyle.LJSBevel;
+            lineSymbol.Cap = LineCapStyle.LCSRound;
+            //定义简单填充符号
+            ISimpleFillSymbol simpleFillSymbol = new SimpleFillSymbol();
+            simpleFillSymbol.Style = SimpleFillStyle.SFSDense6Pattern;
+            IFillSymbol fillSymbol = simpleFillSymbol as FillSymbol;
+            //设置轮廊线样式
+            fillSymbol.OutlineSymbol = lineSymbol;
+            polygonSimpleRender.Symbol = simpleFillSymbol as ISymbol;
+            xzqPolygon.Render = polygonSimpleRender as FeatureRender;
+            //刷新地图
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 分级渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //分级渲染
+            var xzqPolygon = mapCtrl.FocusMap.GetLayer(0) as IFeatureLayer;
+            //1、分级字段，根据实际情况进行修改
+            string classifyField = "Total_Coll";
+            //创建FeatureClassBreaksRender，设置参数
+            IFeatureClassBreaksRender featureClassBreaksRender = new FeatureClassBreaksRender();
+            featureClassBreaksRender.Field = classifyField;//设置渲染字股
+            featureClassBreaksRender.ClassCount = 3;//设置分级数
+            featureClassBreaksRender.SortClassesAscending = true;
+            //分级数、分级的值，根据实际情况自定义修改即可
+            //2、设置分级级别
+            featureClassBreaksRender.SetBreak(0, 20);
+            featureClassBreaksRender.SetBreak(1, 40);
+            featureClassBreaksRender.SetBreak(2, 70);
+            //3、设置分级符号
+            IFillSymbol fillSymbo10 = new SimpleFillSymbol();
+            fillSymbo10.Color = Color.FromArgb(255, 0, 0);
+            IFillSymbol fillSymbo11 = new SimpleFillSymbol();
+            fillSymbo11.Color = Color.FromArgb(0, 250, 0);
+            IFillSymbol fillSymbo12 = new SimpleFillSymbol();
+            fillSymbo12.Color = Color.FromArgb(0, 0, 255);
+            featureClassBreaksRender.SetSymbol(0, fillSymbo10);
+            featureClassBreaksRender.SetSymbol(1, fillSymbo11);
+            featureClassBreaksRender.SetSymbol(2, fillSymbo12);
+            //4、设置分级标签
+            featureClassBreaksRender.SetLabel(0, "第一级");
+            featureClassBreaksRender.SetLabel(1, "第二级");
+            featureClassBreaksRender.SetLabel(2, "第三级");
+            //5、进行渲染并刷新
+            xzqPolygon.Render = featureClassBreaksRender as IFeatureRender;
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 唯一值渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //唯一值渲染
+            var xzqPolygon = mapCtrl.FocusMap.GetLayer(0) as IFeatureLayer;
+            string fieldName = "NAME";//获取唯一值的字段名称，根据实际需要进行修改
+            int fieldIndex = xzqPolygon.FeatureClass.GetFields().GetFieldIndex(fieldName);//获取字段索
+            if (fieldIndex == -1) return;
+            //创建FeatureUniqueValueRender
+            IFeatureUniqueValueRender featureUniqueValueRender = new FeatureUniqueValueRender();
+            //设置渲染值段
+            IList<String> listFields = new List<String>() { fieldName };
+            featureUniqueValueRender.SetFields(listFields);
+            //遍历矢量要素图层，读取每一个要素值
+            IFeatureCursor cursor = xzqPolygon.FeatureClass.Search(null);
+            IFeature feature = cursor.NextFeature();
+            Random rd = new Random();
+            while (feature != null)
+            {
+                int r = (int)(rd.Next(1, 255));
+                int g = (int)(rd.Next(1, 255));
+                int b = (int)(rd.Next(1, 255));
+                //获取字段值
+                string value = feature.GetValue(fieldIndex).ToString();
+                if (!featureUniqueValueRender.GetSymbolMap().ContainsKey(value))
+                {
+                    //初始化值对应的符号:生成FillSymbol面图层
+                    IFillSymbol fillSymbol = new SimpleFillSymbol();
+                    fillSymbol.Color = Color.FromArgb(r, g, b);
+                    featureUniqueValueRender.SetSymbol(value, fillSymbol as ISymbol);
+                    featureUniqueValueRender.SetLabel(value, value);
+                }
+                feature = cursor.NextFeature();
+            }
+            //********设置默认符号，必要代码********
+            IFillSymbol defaultSymbol = new SimpleFillSymbol();
+            defaultSymbol.Color = Color.AliceBlue;
+            featureUniqueValueRender.SetUseDefaultSymbol(true);
+            featureUniqueValueRender.DefaultSymbol = (defaultSymbol as ISymbol);
+            featureUniqueValueRender.DefaultLabel = "";
+            //释放游标
+            (cursor as IDisposable).Dispose();
+            //设置featurerender
+            IFeatureRender featureRender = featureUniqueValueRender as IFeatureRender;
+            featureRender.Transparency = 50;//透明度
+            xzqPolygon.Render = featureRender;
+            //字段标注
+            xzqPolygon.AnnoProperties.AnnoField = fieldName;
+            xzqPolygon.DisplayAnnotation = true;
+            //刷新地图
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 拉伸渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+            IAlgorithmicColorRamp algoColorRamp = new AlgorithmicColorRamp();
+            algoColorRamp.FromColor = Color.Green;
+            algoColorRamp.ToColor = Color.DarkOrange;
+            bool resultOK = algoColorRamp.CreateRamp();
+
+            IRasterStretchColorRampRender rasterSColorRampRender = new RasterStretchColorRampRender();
+            rasterSColorRampRender.BandIndex = 0;
+            rasterSColorRampRender.ClassColors = (algoColorRamp as IColorRamp).GetColors();
+            IRasterRender rasterRender = rasterSColorRampRender as IRasterRender;
+            rsLayer.Render = rasterRender;
+            //刷新地图
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void rGB渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+            IRasterRGBRender rRGBRender = new PIE.Carto.RasterRGBRender();
+
+            rRGBRender.UseRedBand = true; rRGBRender.UseGreenBand = true; rRGBRender.UseBlueBand = true;
+            rRGBRender.SetBandIndices(3, 2, 1);
+
+            IRasterRender render = rRGBRender as IRasterRender; rsLayer.Render = render;
+
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 分级渲染ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+
+            IUniqueValues uniqueValues = new UniqueValues();
+            uniqueValues.Clear();
+            uniqueValues.Add(181, 1);
+            uniqueValues.Add(319, 1);
+            uniqueValues.Add(457, 1); uniqueValues.Add(595, 1);
+            uniqueValues.Add(733, 1); uniqueValues.Add(871, 1);
+
+            IList<Color> colors = new List<Color>();
+            colors.Add(Color.FromArgb(200, 210, 30)); colors.Add(Color.FromArgb(20, 150, 30));
+            colors.Add(Color.FromArgb(50, 210, 160)); colors.Add(Color.FromArgb(140, 110, 25));
+            colors.Add(Color.FromArgb(100, 20, 10)); colors.Add(Color.FromArgb(84, 110, 240));
+
+            IRasterClassifyColorRampRender rClassifyColorRampRender = new RasterClassifyColorRampRender();
+            rClassifyColorRampRender.ClassColors = colors;
+            rClassifyColorRampRender.SetBandIndex(0);
+            rClassifyColorRampRender.UniqueValues = uniqueValues;
+            IList<string> listLabe1 = new List<string>();
+            int count = uniqueValues.GetCount();
+            string beginLabel = "Min";
+            string lastLabel = "";
+            for (int i = 0; i < count; i++)
+            {
+                if (i - 1 >= 0)
+                {
+                    beginLabel = uniqueValues.GetUniqueValue(i - 1).ToString();
+                }
+                lastLabel = uniqueValues.GetUniqueValue(i).ToString();
+                string labelInfo = string.Format("{0}-{1}", beginLabel, lastLabel);
+                listLabe1.Add(labelInfo);
+            }
+            rClassifyColorRampRender.Labels = listLabe1;
+
+            IRasterRender rasterRender = rClassifyColorRampRender as IRasterRender;
+            rsLayer.Render = rasterRender;
+
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 唯一值渲染ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+            IRasterUniqueValueRender rasterUniqueValueRender = new PIE.Carto.RasterUniqueValueRender();//唯一值对象
+            IUniqueValues uniqueValues = new UniqueValues();
+            uniqueValues.Clear();
+
+            IList<Color> colors = new List<Color>();
+            Random rd = new Random();
+            for (int i = 0; i < 6; i++)
+            {
+                colors.Add(Color.FromArgb(rd.Next(1, 255), rd.Next(1, 255), rd.Next(1, 255)));
+                rasterUniqueValueRender.SetLabel(i, "数值" + i.ToString());
+                uniqueValues.Add(i, 1);
+
+                rasterUniqueValueRender.ClassColors = colors;
+                rasterUniqueValueRender.UniqueValues = uniqueValues;
+                rasterUniqueValueRender.SetBandIndex(0);
+
+                IRasterRender rasterRender = rasterUniqueValueRender as IRasterRender; rsLayer.Render = rasterRender;
+                //地图刷新
+                mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+        }
+
+        private void 增强控制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+            //设置栅格拉伸属性
+            IRasterStretch rStretch = rsLayer.Render as IRasterStretch;
+            (rStretch as IRasterDisplayProps).BrightnessValue = 40;//亮度
+            (rStretch as IRasterDisplayProps).ContrastValue = 70;//对比度
+            (rStretch as IRasterDisplayProps).TransparencyValue = 200;//透明度
+            rsLayer.RaiseRenderChanged();
+            //地图刷新
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+
+        private void 拉伸控制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rsLayer = mapCtrl.FocusMap.GetLayer(0) as IRasterLayer;
+            //获取拉伸对象
+            IRasterRender render = rsLayer.Render;
+            IRasterStretch stretch = render as IRasterStretch;
+            //设置拉伸类型
+            stretch.StretchType = PIE.Carto.RasterStretchType.RasterStretch_HistogramEqualize; //拉伸类型为直方图均衡化
+            stretch.LinearStretchPercent = 4.0;//线性拉伸百分比
+            rsLayer.RaiseRenderChanged();
+            //刷新地图
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
     }
 }
