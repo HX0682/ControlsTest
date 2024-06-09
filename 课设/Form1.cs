@@ -1,4 +1,5 @@
-﻿using Gif.Components;
+﻿using DevExpress.Utils.CommonDialogs;
+using Gif.Components;
 using PIE.AxControls;
 using PIE.Carto;
 using PIE.CommonAlgo;
@@ -11,14 +12,16 @@ using PIE.SystemUI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
 namespace 课设
 {
     public partial class Form1 : Form
     {
-        private MapControl mapCtrl;
-        private TOCControl tocCtrl;
+        private MapControl mapCtrl;//地图控件
+        private TOCControl tocCtrl;//图层树控件
+        private PageLayoutControl pageCtrl;//制图控件
 
         public Form1()
         {
@@ -32,9 +35,24 @@ namespace 课设
             //2.添加MapControls
             mapCtrl = new MapControl();
             mapCtrl.Dock = DockStyle.Fill;
-            splitContainer1.Panel2.Controls.Add(mapCtrl);
+            tabPage1.Controls.Add(mapCtrl);
 
-            tocCtrl.SetBuddyControl(mapCtrl);
+            //3.添加PageLayoutControl
+            pageCtrl = new PageLayoutControl();
+            pageCtrl.Dock = DockStyle.Fill;
+            tabPage2.Controls.Add(pageCtrl);
+
+            mapCtrl.FocusMap = pageCtrl.FocusMap;
+            tocCtrl.SetBuddyControl(pageCtrl);
+
+            mapCtrl.Activate();
+            pageCtrl.DeActivate();
+            mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+
+            //制图工具语言转换
+            LanguageManager.GetInstance().InstallFonts();
+            LanguageManager.GetInstance().InstallTranslator();
+
 
             //图层树控件事件注册
             tocCtrl.MouseClick += TocCtrl_MouseClick;//图层树控件鼠标点击事件
@@ -156,7 +174,7 @@ namespace 课设
         private void btnAddRasterData_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "栅格数据(*.tiff,*.tif)|*.tif;*.tiff|矢量数据(*.shp)|*.shp";
+            openFileDialog.Filter = "栅格数据(*.tiff,*.tif)|*.tif;*.tiff;*.shp|矢量数据(*.shp)|*.shp|所有文件|*.*";
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
             string filePath = openFileDialog.FileName;
@@ -1635,6 +1653,202 @@ namespace 课设
             rsLayer.RaiseRenderChanged();
             //刷新地图
             mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+        }
+        /// <summary>
+        /// 模式转换
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(tabControl1.SelectedIndex == 0)//地图模式
+            {
+                mapCtrl.Activate();
+                pageCtrl.DeActivate();
+                mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+            else if(tabControl1.SelectedIndex == 1)//制图模式
+            {
+                pageCtrl.Activate();
+                mapCtrl.DeActivate();
+                pageCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+        }
+        /// <summary>
+        /// page拉框放大
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            ITool tool=new PageZoomInTool();
+            (tool as ICommand).OnCreate(pageCtrl);
+            pageCtrl.CurrentTool = tool;
+        }
+        /// <summary>
+        /// page拉框缩小
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton8_Click(object sender, EventArgs e)
+        {
+            ITool tool = new PageZoomOutTool();
+            (tool as ICommand).OnCreate(pageCtrl);
+            pageCtrl.CurrentTool = tool;
+        }
+        /// <summary>
+        /// page平移
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton9_Click(object sender, EventArgs e)
+        {
+            ITool tool = new PagePanTool();
+            (tool as ICommand).OnCreate(pageCtrl);
+            pageCtrl.CurrentTool = tool;
+        }
+        /// <summary>
+        /// page全图显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton10_Click(object sender, EventArgs e)
+        {
+            ICommand cmd = new PageZoomToWhole();
+            cmd.OnCreate(pageCtrl);
+            cmd.OnClick();
+        }
+        /// <summary>
+        /// page1：1显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton11_Click(object sender, EventArgs e)
+        {
+            ICommand cmd=new PageZoomToOrigin();
+            cmd.OnCreate(pageCtrl);
+            cmd.OnClick();
+        }
+        /// <summary>
+        /// 选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButton12_Click(object sender, EventArgs e)
+        {
+            var tool=new SelectElementTool();
+            (tool as ICommand).OnCreate(pageCtrl);
+            pageCtrl.CurrentTool = tool;
+        }
+
+        private void 插入指北针ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new AddNorthArrowCommand();
+            cmd.OnCreate(pageCtrl);
+            cmd.OnClick();
+        }
+
+        private void 插入图例ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new AddPageLegendCommand();
+            cmd.OnCreate(pageCtrl);
+            cmd.OnClick();
+        }
+
+        private void 插入比例尺ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var cmd = new AddPageScaleBarCommand();
+            cmd.OnCreate(pageCtrl);
+            cmd.OnClick();
+        }
+
+        private void 插入图名ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var tool=new DrawTextElementTool();
+            (tool as ICommand).OnCreate(pageCtrl);
+            pageCtrl.CurrentTool= tool;
+        }
+
+        private void 专题图导出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //设置保存路径
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "PNG|*.png|JPG|*.jpg|TIFF|*.tif";
+            if (saveDialog.ShowDialog() != DialogResult.OK) return;
+            string extension = System.IO.Path.GetExtension(saveDialog.FileName);
+
+            //专题图导出
+            IPageLayout pageLayout = pageCtrl.PageLayout;
+
+            if (extension == ".png")
+                pageLayout.OutputPNG(saveDialog.FileName, 96, null, null, null);//导出PNG
+            else if (extension == ".jpg")
+                pageLayout.OutputJPG(saveDialog.FileName, 96, null, null, null);//导出JPG
+            else if (extension == ".tif")
+                pageLayout.OutputTIF(saveDialog.FileName, 96, null, null, null);//导出TIF
+        }
+
+        private void 保存模板ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var mapdoc = (pageCtrl as Control).Tag as IMapDocument;
+            if (mapdoc == null)
+            {
+                mapdoc = new MapDocument();
+                mapdoc.ReplaceContents(pageCtrl);
+            }
+            string pmdFilePath = mapdoc.GetDocumentFilename();
+            if (string.IsNullOrEmpty(pmdFilePath))
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Title = "地图文档保存为:";
+                saveFileDialog.Filter = "PMD| *.pmd";
+                if (saveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+                pmdFilePath = saveFileDialog.FileName;
+                if (string.IsNullOrEmpty(pmdFilePath)) return;
+
+                if (!pmdFilePath.EndsWith(".pmd"))
+                {
+                    pmdFilePath = pmdFilePath + ".pmd";
+                }
+            }
+            mapdoc.SaveAs(pmdFilePath, false, false);
+        }
+
+        private void 加载模板ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //获取模版路径
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "请选择要打开的地图文档:";
+            openFileDialog.Multiselect = false;
+            openFileDialog.Filter = "PlD|*.pmd";
+            if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            string pmdNewFilePath = openFileDialog.FileName;
+            if (string.IsNullOrEmpty(pmdNewFilePath)) return;
+            //打开模版
+            IMapDocument newMapDocument = new MapDocument();
+            newMapDocument.Open(pmdNewFilePath);
+            //为PageLayoutControl设置PageLayout
+            IPageLayout newPageLayout = newMapDocument.GetPageLayout();
+            pageCtrl.PageLayout = newPageLayout;
+            //为MapContro1设置Map
+            IMap newMap = (newPageLayout as IActiveView).FocusMap;
+            mapCtrl.FocusMap = newMap;
+            //将mapDocument对象存入tag属性中，以备后续使用
+            (pageCtrl as Control).Tag = newMapDocument;
+
+            //激活并刷新控件
+            if (tabControl1.SelectedIndex == 0)
+            {
+                pageCtrl.DeActivate();
+                mapCtrl.Activate();
+                mapCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
+            else
+            {
+                mapCtrl.DeActivate();
+                pageCtrl.Activate();
+                pageCtrl.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
         }
     }
 }
