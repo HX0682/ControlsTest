@@ -815,25 +815,25 @@ namespace 课设
 
         private void 去相关拉伸ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //1.调用功能插件中的窗体
-            var frm = new PIE.Plugin.FrmDeRelationStretch();
-            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            PIE.CommonAlgo.DeRelationStretch_Exchange info = new PIE.CommonAlgo.DeRelationStretch_Exchange();
 
-            //1.创建算法对象
-            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.DeRelationStretch");
+            info.m_strInputFile = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
+            info.m_strOutputFile = @"D:\Temp\07-数据基础操作数据\04.World\ip_result12.tif";
+            info.m_strFileTypeCode = "GTiff";
+
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.DeRelationStretchAlgo");
             if (algo == null) return;
-            algo.Name = "DeRelationStretch";
-            algo.Description = "去相关拉伸算法";
-            //2.设置算法参数
-            algo.Params = frm.ExChangeData;
 
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = " 去相关拉伸";
+            algo.Params = info;
+            bool result = PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
 
-            //4.执行算法
-            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            //3、结果显示
+            ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\ip_result12.tif");
+            mapCtrl.ActiveView.FocusMap.AddLayer(layer);
+            mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
 
         private void 影像格式转换ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -959,30 +959,31 @@ namespace 课设
 
         private void 波段运算ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //1.调用功能插件中的窗体
-            var frm = new PIE.AxControls.UtilityOperBandDialog();
-            //if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-
-            //设置地图，与mapControlMain中的地图绑定
-            frm.SetMap(mapCtrl.FocusMap);
-            //初始化
-            frm.ReInit();
-
-            //1.创建算法对象
-            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandOperAlgo");
+            PIE.CommonAlgo.BandOper_Exchange_Info info = new PIE.CommonAlgo.BandOper_Exchange_Info();
+            info.StrExp = "b2-b1";
+            info.SelectFileBands = new List<int> { 3, 2 };//band3和band2 根据运算公式的波段大小先后顺序确定 b1的选择波段就是3；
+            info.SelectFileNames = new List<string> { @"D:\Temp\07-数据基础操作数据\04.World\World.tif", @"D:\Temp\07-数据基础操作数据\04.World\World.tif" };//分别为band3和band2数据路径
+            info.OutputFilePath = @"D:\Temp\07-数据基础操作数据\04.World\World3.tif";
+            info.FileTypeCode = "GTiff";
+            info.PixelDataType = 6;
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.BandOperAlgo");
             if (algo == null) return;
-            algo.Name = "BandOperAlgo";
-            algo.Description = "波段运算";
-            //2.设置算法参数
-            algo.Params = frm.GetParams();
 
-            //3.注册算法事件
-            var algoEvent = algo as ISystemAlgoEvents;
-            algoEvent.OnProgressChanged += RCAlgoEvent_OnProgressChanged;
-            algoEvent.OnExecuteCompleted += RCAlgoEvent_OnExecuteCompleted;
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = "波段运算";
+            algo.Params = info;
 
-            //4.执行算法
-            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            //3、结果显示
+            bool result = PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
+            if (result)
+            {
+                MessageBox.Show("波段算法执行成功");
+                ILayer layer = LayerFactory.CreateDefaultLayer(info.OutputFilePath);
+                if (layer == null) return;
+                mapCtrl.ActiveView.FocusMap.AddLayer(layer);
+                mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
+            }
         }
 
         private void 波谱运算ToolStripMenuItem_Click(object sender, EventArgs e)
