@@ -12,7 +12,8 @@ FormMain1即为Open项目窗体为
 ![9ef315bf2dcc461a8c05bcfc56cdfa79](https://github.com/Treepeople10086/ControlsTest/assets/115169291/33fcc834-fd6d-4df9-a0ca-052e574fcdcb)
 
 课设项目窗体
-![705475478790da2c7243c7912c2200ee](https://github.com/Treepeople10086/ControlsTest/assets/115169291/76e1d30e-6ce0-4846-b574-c6d718280380)
+![image](https://github.com/HX0682/ControlsTest/assets/115169291/b2288636-eb50-49d5-a129-1d9346f2925e)
+
 
 实验三数据基础操作窗体
 ![image](https://github.com/Treepeople10086/ControlsTest/assets/115169291/1f16025a-96d9-4191-82f8-0fada37e1e29)
