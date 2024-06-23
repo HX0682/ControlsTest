@@ -759,25 +759,25 @@ namespace 遥感预处理两种
 
         private void 去相关拉伸ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //1.调用功能插件中的窗体
-            var frm = new PIE.Plugin.FrmDeRelationStretch();
-            if (frm.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            PIE.CommonAlgo.DeRelationStretch_Exchange info = new PIE.CommonAlgo.DeRelationStretch_Exchange();
 
-            //1.创建算法对象
-            ISystemAlgo algo = AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.DeRelationStretch");
+            info.m_strInputFile = @"D:\Temp\07-数据基础操作数据\04.World\World.tif";
+            info.m_strOutputFile = @"D:\Temp\07-数据基础操作数据\04.World\ip_result12.tif";
+            info.m_strFileTypeCode = "GTiff";
+
+            PIE.SystemAlgo.ISystemAlgo algo = PIE.SystemAlgo.AlgoFactory.Instance().CreateAlgo("PIE.CommonAlgo.dll", "PIE.CommonAlgo.DeRelationStretchAlgo");
             if (algo == null) return;
-            algo.Name = "DeRelationStretch";
-            algo.Description = "去相关拉伸算法";
-            //2.设置算法参数
-            algo.Params = frm.ExChangeData;
 
-            ////3.注册算法事件
-            //var algoEvent = algo as ISystemAlgoEvents;
-            //algoEvent.OnProgressChanged += CAlgoEvent_OnProgressChanged;
-            //algoEvent.OnExecuteCompleted += CAlgoEvent_OnExecuteCompleted;
+            //2、算法执行
+            PIE.SystemAlgo.ISystemAlgoEvents algoEvents = algo as PIE.SystemAlgo.ISystemAlgoEvents;
+            algo.Name = " 去相关拉伸";
+            algo.Params = info;
+            bool result = PIE.SystemAlgo.AlgoFactory.Instance().ExecuteAlgo(algo);
 
-            //4.执行算法
-            AlgoFactory.Instance().AsynExecuteAlgo(algo);
+            //3、结果显示
+            ILayer layer = PIE.Carto.LayerFactory.CreateDefaultLayer(@"D:\Temp\07-数据基础操作数据\04.World\ip_result12.tif");
+            mapCtrl.ActiveView.FocusMap.AddLayer(layer);
+            mapCtrl.ActiveView.PartialRefresh(ViewDrawPhaseType.ViewAll);
         }
         /// <summary>
         /// 影像格式转换
